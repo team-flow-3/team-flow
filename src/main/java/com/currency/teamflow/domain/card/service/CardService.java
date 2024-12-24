@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.card.service;
 
+import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
@@ -20,13 +21,16 @@ public class CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final CardManagerRepository cardManagerRepository;
+    private final BoardListRepository boardListRepository;
 
     public CardService(CardRepository cardRepository,
                        UserRepository userRepository,
-                       CardManagerRepository cardManagerRepository) {
+                       CardManagerRepository cardManagerRepository,
+                       BoardListRepository boardListRepository) {
         this.cardRepository = cardRepository;
         this.userRepository = userRepository;
         this.cardManagerRepository = cardManagerRepository;
+        this.boardListRepository = boardListRepository;
     }
 
     /**
@@ -60,9 +64,39 @@ public class CardService {
         cardManagerRepository.saveAll(cardManagers);
         card.addCardManagers(cardManagers);
 
+        // 리스트 저장
+        BoardList boardList = boardListRepository.findByIdOrElseThrow(boardListId);
+        card.addBoardList(boardList);
+
         // 카드 저장
         cardRepository.save(card);
 
         return CardResponseDto.toDto(card);
+    }
+
+    /**
+     * 카드 단건 조회 서비스 메서드
+     *
+     * @param cardId 카드 식별자
+     * @return CardResponseDto
+     */
+    public CardResponseDto getCard(Long cardId) {
+
+        Card card = cardRepository.findByIdOrElseThrow(cardId);
+
+        return CardResponseDto.toDto(card);
+    }
+
+    /**
+     * 리스트 내의 카드 전체 조회 서비스 메서드
+     *
+     * @param listId 리스트 식별자
+     * @return List<CardResponseDto>
+     */
+    public List<CardResponseDto> getCards(Long listId) {
+
+        List<Card> cardList = cardRepository.findAllByBoardListId(listId);
+
+        return cardList.stream().map(CardResponseDto::toDto).toList();
     }
 }
