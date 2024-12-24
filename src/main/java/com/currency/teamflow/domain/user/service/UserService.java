@@ -20,6 +20,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 회원가입
+     * @param requestDto
+     * @return
+     */
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
 
         List<User> users = userRepository.findUserByEmailAndStatus(requestDto.getEmail(), Status.DELETE);
