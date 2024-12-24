@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.attachment.entity;
 
+import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,10 @@ public class Attachment extends BaseEntity {
 
 	@NotNull
 	private String file_url;
+
+	@ManyToOne
+	@JoinColumn(name = "card_id")
+	private Card card;
 
 	public Attachment(String file_type, String file_url) {
 		this.file_type = file_type;
