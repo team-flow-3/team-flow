@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.user.entity;
 
+import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
 import com.currency.teamflow.global.base.BaseEntity;
 import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Status;
@@ -40,5 +41,13 @@ public class User extends BaseEntity {
 	private Status status; //유저 상태
 
 	public User() {}
+
+	public User(UserRegisterRequestDto requestDto, String encodedPassword) {
+		this.email = requestDto.getEmail();
+		this.password = encodedPassword;
+		this.nickName = requestDto.getNickName();
+		this.status = Status.NORMAL;
+		this.auth = requestDto.getAuth();
+	}
 
 }
