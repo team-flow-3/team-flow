@@ -16,11 +16,13 @@ public class Comment extends BaseEntity {
 
 	private String comment;
 
-
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@ManyToOne
+	@JoinColumn(name = "card_id")
+	private Card card;
 
 	public Comment(String comment, User user) {
 		this.comment = comment;
