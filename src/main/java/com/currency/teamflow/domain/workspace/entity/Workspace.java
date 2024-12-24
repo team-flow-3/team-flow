@@ -1,8 +1,12 @@
 package com.currency.teamflow.domain.workspace.entity;
 
 import com.currency.teamflow.global.base.BaseEntity;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 
 
@@ -18,8 +22,13 @@ public class Workspace extends BaseEntity {
 	private String workspaceName;//워크스페이스 이름
 
 	@NotNull
-	private Long workspaceExplanation;//워크스페이스 설명
+	private String workspaceExplanation;//워크스페이스 설명
 
 	public Workspace() {
+	}
+
+	public Workspace(String workspaceName, String workspaceExplanation) {
+		this.workspaceName = workspaceName;
+		this.workspaceExplanation = workspaceExplanation;
 	}
 }
