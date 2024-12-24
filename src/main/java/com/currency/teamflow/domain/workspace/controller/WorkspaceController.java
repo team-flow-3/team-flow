@@ -27,7 +27,7 @@ public class WorkspaceController {
 	 */
 	@PostMapping
 	public ResponseEntity<WorkspaceResponseDto> createWorkspace(
-		@RequestBody WorkspaceRequestDto workspaceRequestDto)throws IOException {
+		@RequestBody WorkspaceRequestDto workspaceRequestDto) {
 
 		WorkspaceResponseDto workspaceResponseDto = workspaceService.createWorkspace(
 			workspaceRequestDto.getWorkspaceName(),
