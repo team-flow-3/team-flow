@@ -18,13 +18,13 @@ import java.util.List;
 public class Card extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cardId;
+	private Long cardId;
 
 	@NotNull
 	private String cardTitle;
 
 	@NotNull
-	private String cardDescription;
+	private String cardExplanation;
 
 	private LocalDateTime endAt;
 
@@ -41,13 +41,17 @@ public class Card extends BaseEntity {
 	@OneToMany(mappedBy = "card")
 	private List<CardManager> cardManagers = new ArrayList<>();
 
-	public Card(String cardTitle, String cardDescription, LocalDateTime endAt) {
+	public Card(String cardTitle, String cardExplanation, LocalDateTime endAt) {
 		this.cardTitle = cardTitle;
-		this.cardDescription = cardDescription;
+		this.cardExplanation = cardExplanation;
 		this.endAt = endAt;
 	}
 
 	public Card() {
 
+	}
+
+	public void addCardManagers(List<CardManager> cardManagers) {
+		this.cardManagers.addAll(cardManagers);
 	}
 }
