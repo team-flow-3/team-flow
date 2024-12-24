@@ -54,4 +54,9 @@ public class Card extends BaseEntity {
 	public void addCardManagers(List<CardManager> cardManagers) {
 		this.cardManagers.addAll(cardManagers);
 	}
+
+	public void addBoardList(BoardList boardList) {
+		this.boardList = boardList;
+		boardList.getCards().add(this);
+	}
 }
