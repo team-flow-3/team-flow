@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.user.entity;
 
+import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
 import com.currency.teamflow.global.base.BaseEntity;
 import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Status;
@@ -12,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Entity
-@Table(name = "user")
+@Entity(name = "user")
 public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +38,14 @@ public class User extends BaseEntity {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Status status; //유저 상태
+
+	public User(UserRegisterRequestDto requestDto, String encodedPassword) {
+		this.email = requestDto.getEmail();
+		this.password = encodedPassword;
+		this.nickName = requestDto.getNickName();
+		this.status = Status.NORMAL;
+		this.auth = requestDto.getAuth();
+	}
 
 	public User() {}
 
