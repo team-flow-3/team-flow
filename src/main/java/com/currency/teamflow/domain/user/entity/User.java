@@ -47,6 +47,11 @@ public class User extends BaseEntity {
 		this.auth = requestDto.getAuth();
 	}
 
+	// 회원 탈퇴 상태로 변경
+	public void updateDeactivatedStatus() {
+		this.status = Status.DELETE;
+	}
+
 	public User() {}
 
 }

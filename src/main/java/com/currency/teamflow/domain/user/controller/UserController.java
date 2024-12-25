@@ -1,9 +1,6 @@
 package com.currency.teamflow.domain.user.controller;
 
-import com.currency.teamflow.domain.user.dto.UserLoginRequestDto;
-import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
-import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
-import com.currency.teamflow.domain.user.dto.UserResponseDto;
+import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.repository.UserRepository;
 import com.currency.teamflow.domain.user.service.UserService;
@@ -13,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -58,6 +52,26 @@ public class UserController {
                 = new UserResponseDto(user.getId(), user.getEmail(), "로그인되었습니다.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param requestDto
+     * @param servletRequest
+     * @return
+     */
+    @PatchMapping
+    public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
+                                                       HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession(false);
+        User loginUser = (User) session.getAttribute("user");
+
+        userService.deleteUser(loginUser.getId(), requestDto);
+
+        UserResponseDto loginResponseDto
+                = new UserResponseDto(loginUser.getId(), loginUser.getEmail(), "탈퇴 처리 되었습니다");
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(loginResponseDto);
     }
 
 }
