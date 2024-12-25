@@ -1,7 +1,6 @@
 package com.currency.teamflow.domain.user.dto;
 
 import com.currency.teamflow.global.enums.Auth;
-import com.currency.teamflow.global.enums.Status;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

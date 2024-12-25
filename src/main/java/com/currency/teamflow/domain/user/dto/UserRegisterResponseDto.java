@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 @Getter
 public class UserRegisterResponseDto {
 
-    private  Long id;
+    private Long id;
 
-    private  String email;
+    private String email;
 
-    private  String nickName;
+    private String nickName;
 
-    private  Auth auth;
+    private Auth auth;
 
-    private  LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     public UserRegisterResponseDto(User user) {
         this.id = user.getId();
