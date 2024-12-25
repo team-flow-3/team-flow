@@ -61,6 +61,7 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
                                                        HttpServletRequest servletRequest) {
+        //세션이 존재하지 않으면 null로 반환
         HttpSession session = servletRequest.getSession(false);
         User loginUser = (User) session.getAttribute("user");
 
