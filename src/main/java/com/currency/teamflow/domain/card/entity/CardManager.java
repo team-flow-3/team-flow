@@ -11,7 +11,7 @@ import lombok.Getter;
 public class CardManager extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int cardManagerId;
+    private Long cardManagerId;
 
     @ManyToOne
     @JoinColumn(name = "card_id")
@@ -20,6 +20,11 @@ public class CardManager extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public CardManager(Card card, User user) {
+        this.card = card;
+        this.user = user;
+    }
 
     public CardManager() {
 
