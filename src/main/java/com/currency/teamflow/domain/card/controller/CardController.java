@@ -40,7 +40,7 @@ public class CardController {
      * @param listId 리스트 식별자
      * @return ResponseEntity<List<CardResponseDto>> 리스트 내의 카드들 정보 전달
      */
-    @GetMapping("list/{listId}/cards/")
+    @GetMapping("list/{listId}/cards")
     public ResponseEntity<List<CardResponseDto>> getCards(@PathVariable Long listId) {
 
         List<CardResponseDto> cardResponseDtoList = cardService.getCards(listId);
