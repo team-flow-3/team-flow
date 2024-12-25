@@ -1,6 +1,7 @@
 package com.currency.teamflow.domain.card.service;
 
 import com.currency.teamflow.domain.boardlist.entity.BoardList;
+import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
@@ -11,7 +12,6 @@ import com.currency.teamflow.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,20 +36,17 @@ public class CardService {
     /**
      * 카드 생성 서비스 메서드
      *
-     * @param cardTitle 카드 제목
-     * @param cardExplanation 카드 내용
-     * @param endAt 마감일
-     * @param userIds 담당자
+     * @param cardRequestDto 카드 내용
      * @return CardResponseDto
      */
     @Transactional
-    public CardResponseDto createCard(String cardTitle, String cardExplanation, LocalDateTime endAt, List<Long> userIds) {
+    public CardResponseDto createCard(CardRequestDto cardRequestDto) {
 
         // 카드 생성
-        Card card = new Card(cardTitle, cardExplanation, endAt);
+        Card card = new Card(cardRequestDto.getCardTitle(), cardRequestDto.getCardExplanation(), cardRequestDto.getEndAt());
 
         // 담당자 정보 가져오기
-        List<User> users = userRepository.findAllById(userIds);
+        List<User> users = userRepository.findAllById(cardRequestDto.getUserIds());
 
         // 카드 담당자 중간테이블 데이터 리스트 생성
         List<CardManager> cardManagers = new ArrayList<>();
@@ -65,7 +62,7 @@ public class CardService {
         card.addCardManagers(cardManagers);
 
         // 리스트 저장
-        BoardList boardList = boardListRepository.findByIdOrElseThrow(boardListId);
+        BoardList boardList = boardListRepository.findByIdOrElseThrow(cardRequestDto.getListId());
         card.addBoardList(boardList);
 
         // 카드 저장

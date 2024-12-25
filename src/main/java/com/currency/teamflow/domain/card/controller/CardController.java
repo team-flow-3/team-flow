@@ -29,11 +29,7 @@ public class CardController {
     @PostMapping("/cards")
     public ResponseEntity<CardResponseDto> createCard(@RequestBody CardRequestDto cardRequestDto) {
 
-        CardResponseDto cardResponseDto = cardService.createCard(cardRequestDto.getCardTitle(),
-                cardRequestDto.getCardExplanation(),
-                cardRequestDto.getEndAt(),
-                cardRequestDto.getUserIds()
-        );
+        CardResponseDto cardResponseDto = cardService.createCard(cardRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
     }
