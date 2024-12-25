@@ -2,6 +2,7 @@ package com.currency.teamflow.domain.card.controller;
 
 import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
+import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.service.CardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,21 @@ public class CardController {
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long cardId) {
 
         CardResponseDto cardResponseDto = cardService.getCard(cardId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
+    }
+
+    /**
+     * 카드 단건 수정 API
+     *
+     * @param cardId 카드 식별자
+     * @param cardUpdateRequestDto 수정할 카드 내용 dto
+     * @return ResponseEntity<CardResponseDto>
+     */
+    @PutMapping("/cards/{cardId}")
+    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId, @RequestBody CardUpdateRequestDto cardUpdateRequestDto) {
+
+        CardResponseDto cardResponseDto = cardService.updateCard(cardId, cardUpdateRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }
