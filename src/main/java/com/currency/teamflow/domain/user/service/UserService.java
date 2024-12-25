@@ -1,6 +1,7 @@
 package com.currency.teamflow.domain.user.service;
 
 import com.currency.teamflow.domain.user.dto.UserLoginRequestDto;
+import com.currency.teamflow.domain.user.dto.UserPasswordRequestDto;
 import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
 import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
 import com.currency.teamflow.domain.user.entity.User;
@@ -9,8 +10,9 @@ import com.currency.teamflow.global.config.PasswordEncoder;
 import com.currency.teamflow.global.enums.Status;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -68,5 +70,26 @@ public class UserService {
         }
 
         return findUser;
+    }
+
+    /**
+     * 회원 탈퇴
+     * @param userId
+     * @param requestDto
+     */
+    @Transactional
+    public void deleteUser(Long userId, @Valid UserPasswordRequestDto requestDto) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        if (findUser.getStatus().equals(Status.DELETE)) {
+            throw new CustomException(ErrorCode.FORBIDDEN_LOGIN);
+        }
+
+        if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
+        }
+
+        findUser.updateDeactivatedStatus();
     }
 }
