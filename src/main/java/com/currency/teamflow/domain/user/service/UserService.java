@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.user.service;
 
+import com.currency.teamflow.domain.user.dto.UserLoginRequestDto;
 import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
 import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
 import com.currency.teamflow.domain.user.entity.User;
@@ -14,13 +15,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
+
         List<User> users
                 = userRepository.findUserByEmailAndStatus(requestDto.getEmail(), Status.DELETE);
 
@@ -40,5 +47,26 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return new UserRegisterResponseDto(savedUser);
+    }
+
+    /**
+     * 로그인 가능
+     * @param requestDto
+     * @return
+     */
+    public User loginUser(UserLoginRequestDto requestDto) {
+
+        User findUser = userRepository.findUserByEmailOrElseThrow(requestDto.getEmail());
+
+        if (findUser.getStatus().equals(Status.DELETE)) {
+            throw new CustomException(ErrorCode.FORBIDDEN_LOGIN);
+        }
+
+        // 패스워드 일치 여부 검사
+        if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
+        }
+
+        return findUser;
     }
 }
