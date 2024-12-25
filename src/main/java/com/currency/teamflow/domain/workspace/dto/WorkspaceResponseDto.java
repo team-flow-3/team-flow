@@ -7,6 +7,8 @@ import lombok.Getter;
 @Getter
 public class WorkspaceResponseDto {
 
+	private final Long id;//워크스페이스 id
+
 	private final String workspaceName;//워크스페이스 이름
 
 	private final String workspaceExplanation;//워크스페이스 설명
@@ -15,8 +17,9 @@ public class WorkspaceResponseDto {
 
 	private final LocalDateTime modifiedAt;//수정일
 
-	public WorkspaceResponseDto(String workspaceName, String workspaceExplanation,
+	public WorkspaceResponseDto(Long id, String workspaceName, String workspaceExplanation,
 		LocalDateTime createdAt, LocalDateTime modifiedAt) {
+		this.id = id;
 		this.workspaceName = workspaceName;
 		this.workspaceExplanation = workspaceExplanation;
 		this.createdAt = createdAt;
@@ -26,6 +29,7 @@ public class WorkspaceResponseDto {
 	//워크스페이스 생성
 	public static WorkspaceResponseDto toDto(Workspace workspace) {
 		return new WorkspaceResponseDto(
+			workspace.getId(),
 			workspace.getWorkspaceName(),
 			workspace.getWorkspaceExplanation(),
 			workspace.getCreatedAt(),
