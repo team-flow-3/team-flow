@@ -35,10 +35,10 @@ public class Card extends BaseEntity {
 	@OneToMany(mappedBy = "card")
 	private List<Attachment> attachments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CardManager> cardManagers = new ArrayList<>();
 
 	public Card(String cardTitle, String cardExplanation, LocalDateTime endAt) {
