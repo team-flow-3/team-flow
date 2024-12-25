@@ -21,6 +21,13 @@ public class CardManagerService {
         this.cardManagerRepository = cardManagerRepository;
     }
 
+    /**
+     * 카드 담당자 데이터 생성 서비스 메서드
+     *
+     * @param card 카드 객체
+     * @param userIds 유저 식별자 리스트
+     * @return List<CardManager>
+     */
     public List<CardManager> createCardManager(Card card, List<Long> userIds) {
 
         // 담당자 정보 가져오기
@@ -42,6 +49,13 @@ public class CardManagerService {
     }
 
 
+    /**
+     * 카드 담당자 데이터 수정 서비스 메서드
+     *
+     * @param card 카드 객체
+     * @param userIds 유저 식별자 리스트
+     * @return List<CardManager>
+     */
     public List<CardManager> updateCardManager(Card card, List<Long> userIds) {
 
         // 기존 담당자 삭제
