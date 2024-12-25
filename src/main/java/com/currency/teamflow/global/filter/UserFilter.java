@@ -18,6 +18,7 @@ public class UserFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         // uri 로그를 찍기위해 설정
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        //HTTP 요청 정보 가져오기
         String requestURI = httpServletRequest.getRequestURI();
 
         // 화이트리스트로 로그인, 회원가입 시에는 허용
@@ -33,6 +34,7 @@ public class UserFilter implements Filter {
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
+    // 화이트리스트 확인 로직
     private boolean isWhiteList(String requestURI) {
         return PatternMatchUtils.simpleMatch(WHITE_LIST, requestURI);
     }
