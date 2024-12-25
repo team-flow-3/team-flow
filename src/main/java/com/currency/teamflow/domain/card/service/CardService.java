@@ -5,6 +5,7 @@ import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
+import com.currency.teamflow.domain.card.repository.BoardListRepository;
 import com.currency.teamflow.domain.card.repository.CardManagerRepository;
 import com.currency.teamflow.domain.card.repository.CardRepository;
 import com.currency.teamflow.domain.user.entity.User;
