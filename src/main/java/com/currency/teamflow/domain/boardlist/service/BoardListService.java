@@ -32,7 +32,7 @@ public class BoardListService {
 		//보드 id 가져오기
 		Board board = boardRepository.findByIdOrElseThrow(BoardId);
 		//보드의 리스트 array 최대값 조회
-		Long arrayNumber = boardRepository.findArrayByBoardOrElseThrow(board);
+		Long arrayNumber = boardRepository.findArrayByBoard(board);
 
 		//리스트 생성
 		BoardList boardList = new BoardList(board, listTitle);

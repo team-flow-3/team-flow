@@ -19,7 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	@Query("SELECT COALESCE(MAX(bl.array), 0)"
 		+ "FROM BoardList bl "
 		+ "WHERE bl.board = :board")
-	Long findArrayByBoardOrElseThrow(Board board);
+	Long findArrayByBoard(Board board);
 
 
 }
