@@ -77,4 +77,13 @@ public class CardController {
 
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }
+
+
+    @DeleteMapping("/cards/{cardId}")
+    public ResponseEntity<String> deleteCard(@PathVariable Long cardId) {
+
+        cardService.deleteCard(cardId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("카드 삭제가 완료되었습니다.");
+    }
 }

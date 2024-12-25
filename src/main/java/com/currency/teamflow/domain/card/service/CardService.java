@@ -105,9 +105,14 @@ public class CardService {
                 cardManagers
                 );
 
-
         cardRepository.save(card);
 
         return CardResponseDto.toDto(card);
+    }
+
+
+    public void deleteCard(Long cardId) {
+
+        cardRepository.deleteById(cardId);
     }
 }

@@ -13,11 +13,11 @@ public class CardManager extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardManagerId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id")
     private Card card;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
