@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.board.entity;
 
+import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.Entity;
@@ -8,10 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
-
 
 @Getter
 @Entity
@@ -33,6 +36,9 @@ public class Board extends BaseEntity {
 	private String boardBackgroundColor;//보드 배경색
 
 	private String imageUrl;//보드 이미지
+
+	@OneToMany(mappedBy = "board")
+	private List<BoardList> boardLists = new ArrayList<>();
 
 	public Board() {
 	}

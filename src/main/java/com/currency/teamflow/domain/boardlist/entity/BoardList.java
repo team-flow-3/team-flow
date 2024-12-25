@@ -5,10 +5,9 @@ import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 @Getter
 @Entity
@@ -35,4 +34,17 @@ public class BoardList extends BaseEntity {
     public BoardList() {
     }
 
+    public BoardList(Board board, String listTitle) {
+        updateBoard(board);
+        this.listTitle = listTitle;
+    }
+
+    public void updateBoard(Board board){
+        this.board = board;
+        board.getBoardLists().add(this);
+    }
+
+    public void addArrayNumber(long array) {
+        this.array = array;
+    }
 }

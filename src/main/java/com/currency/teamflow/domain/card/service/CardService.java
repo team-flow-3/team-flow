@@ -1,12 +1,12 @@
 package com.currency.teamflow.domain.card.service;
 
 import com.currency.teamflow.domain.boardlist.entity.BoardList;
+import com.currency.teamflow.domain.boardlist.repository.BoardListRepository;
 import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
 import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
-import com.currency.teamflow.domain.card.repository.BoardListRepository;
 import com.currency.teamflow.domain.card.repository.CardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
