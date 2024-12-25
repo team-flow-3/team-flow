@@ -1,7 +1,5 @@
 package com.currency.teamflow.domain.boardlist.controller;
 
-import com.currency.teamflow.domain.board.dto.BoardRequestDto;
-import com.currency.teamflow.domain.board.dto.BoardResponseDto;
 import com.currency.teamflow.domain.boardlist.dto.BoardListRequestDto;
 import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.boardlist.service.BoardListService;

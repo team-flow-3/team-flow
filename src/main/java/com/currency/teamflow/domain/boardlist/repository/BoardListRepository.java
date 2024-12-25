@@ -1,6 +1,5 @@
 package com.currency.teamflow.domain.boardlist.repository;
 
-
 import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;

@@ -6,6 +6,7 @@ import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.domain.boardlist.repository.BoardListRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,8 @@ public class BoardListService {
 	public BoardListResponseDto createBoardList(Long BoardId, String listTitle) {
 		//보드 id 가져오기
 		Board board = boardRepository.findByIdOrElseThrow(BoardId);
-		//보드의 리스트 array 최대값 조회
-		Long arrayNumber = boardRepository.findArrayByBoard(board);
+		//리스트 크기, array 최대값
+		int arrayNumber = board.getBoardLists().size();
 
 		//리스트 생성
 		BoardList boardList = new BoardList(board, listTitle);
