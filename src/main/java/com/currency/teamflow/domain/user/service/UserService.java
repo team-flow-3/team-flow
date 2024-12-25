@@ -60,6 +60,7 @@ public class UserService {
 
         User findUser = userRepository.findUserByEmailOrElseThrow(requestDto.getEmail());
 
+        // 사용자 상태 확인
         if (findUser.getStatus().equals(Status.DELETE)) {
             throw new CustomException(ErrorCode.FORBIDDEN_LOGIN);
         }
@@ -79,17 +80,21 @@ public class UserService {
      */
     @Transactional
     public void deleteUser(Long userId, @Valid UserPasswordRequestDto requestDto) {
+        // 사용자 조회
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
 
+        // 사용자 상태 확인
         if (findUser.getStatus().equals(Status.DELETE)) {
             throw new CustomException(ErrorCode.FORBIDDEN_LOGIN);
         }
 
+        // 비밀번호 검증
         if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
         }
 
+        // 탈퇴 상태 업데이트
         findUser.updateDeactivatedStatus();
     }
 }
