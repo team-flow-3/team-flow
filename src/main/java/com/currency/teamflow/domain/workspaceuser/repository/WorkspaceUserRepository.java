@@ -27,4 +27,9 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
         );
     }
 
+    default WorkspaceUser findByWorkspaceOrElseThrow(Long workspaceUserId) {
+        return findById(workspaceUserId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND));
+    }
+
 }

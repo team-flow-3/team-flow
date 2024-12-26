@@ -31,6 +31,12 @@ public class WorkspaceUserService {
         this.workspaceRepository = workspaceRepository;
     }
 
+    /**
+     * ADMIN이 특정 워크스페이스의 사용자를 WORKSPACE_ADMIN으로 설정
+     * @param workspaceId 워크스페이스 ID
+     * @param userId      사용자 ID
+     * @return WorkspaceUserResponseDto
+     */
     @Transactional
     public WorkspaceUserResponseDto assignWorkspaceAdmin(Long workspaceId, Long userId) {
 
@@ -48,5 +54,18 @@ public class WorkspaceUserService {
     }
 
 
+    /**
+     * ADMIN이 특정 워크스페이스 관리자를 삭제
+     * @param workspaceUserId 워크스페이스 사용자 ID
+     * @return 삭제 완료 메시지
+     */
+    @Transactional
+    public void deleteWorkspaceAdmin(Long workspaceUserId) {
+        // WorkspaceUser 조회
+        WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceOrElseThrow(workspaceUserId);
+
+        // 삭제 처리
+        workspaceUserRepository.delete(workspaceUser);
+    }
 }
 
