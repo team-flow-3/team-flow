@@ -14,6 +14,7 @@ public class Comment extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long commentId;
 
+	@Column(columnDefinition = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
 	private String comment;
 
 	@ManyToOne
@@ -24,9 +25,10 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "card_id")
 	private Card card;
 
-	public Comment(String comment, User user) {
-		this.comment = comment;
+	public Comment(User user, Card card, String comment) {
 		this.user = user;
+		this.card = card;
+		this.comment = comment;
 	}
 
 	public Comment() {
