@@ -4,11 +4,16 @@ import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.repository.CardRepository;
 import com.currency.teamflow.domain.comment.dto.CommentRequestDto;
 import com.currency.teamflow.domain.comment.dto.CommentResponseDto;
+import com.currency.teamflow.domain.comment.dto.CommentUpdateRequestDto;
 import com.currency.teamflow.domain.comment.entity.Comment;
 import com.currency.teamflow.domain.comment.repository.CommentsRepository;
 import com.currency.teamflow.domain.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -40,4 +45,52 @@ public class CommentService {
         return CommentResponseDto.toDto(comment);
     }
 
+    /**
+     * 댓글 전체 조회 서비스 메서드
+     *
+     * @param pageable 페이징 객체
+     * @param cardId 카드 식별자
+     * @return List<CommentResponseDto>
+     */
+    public List<CommentResponseDto> getComments(Pageable pageable, Long cardId) {
+
+        // 페이징을 통해 한 카드 내의 있는 댓글 가져오기 (생성일 기준 내림차순)
+        Page<Comment> comments = commentsRepository.findAllByCardCardIdOrderByCreatedAtDesc(cardId, pageable);
+
+        return comments.stream().map(CommentResponseDto::toDto).toList();
+    }
+
+    /**
+     * 댓글 단건 수정 서비스 메서드
+     *
+     * @param commentId 댓글 식별자
+     * @param commentUpdateRequestDto 수정할 댓글 내용
+     * @return CommentResponseDto
+     */
+    @Transactional
+    public CommentResponseDto updateComment(Long commentId, CommentUpdateRequestDto commentUpdateRequestDto) {
+
+        // 댓글 정보 가져오기
+        Comment comment = commentsRepository.findByIdOrElseThrow(commentId);
+
+        // 댓글 수정
+        comment.updateComment(commentUpdateRequestDto.getComment());
+
+        // 댓글 저장
+        commentsRepository.save(comment);
+
+        return CommentResponseDto.toDto(comment);
+    }
+
+    /**
+     * 댓글 단건 삭제 서비스 메서드
+     *
+     * @param commentId 댓글 식별자
+     */
+    @Transactional
+    public void deleteComment(Long commentId) {
+
+        // 댓글 삭제
+        commentsRepository.deleteById(commentId);
+    }
 }
