@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -77,7 +78,7 @@ public class AttachmentService {
             String fileUrl = getPublicUrl(fileName);
 
             // 첨부파일 객체 생성
-            Attachment attachment = new Attachment(file.getOriginalFilename(), extension, fileUrl, card);
+            Attachment attachment = new Attachment(file.getOriginalFilename(), fileName, extension, fileUrl, card);
 
             // 첨부파일 DB에 저장
             attachmentRepository.save(attachment);
@@ -124,5 +125,20 @@ public class AttachmentService {
         List<Attachment> attachmentList = attachmentRepository.findAllByCardCardId(cardId);
 
         return attachmentList.stream().map(AttachmentResponseDto::toDto).toList();
+    }
+
+    /**
+     * 첨부파일 삭제 서비스 메서드
+     *
+     * @param attachmentId 첨부파일 식별자
+     */
+    public void deleteAttachment(Long attachmentId) {
+
+        Attachment attachment = attachmentRepository.findByIdOrElseThrow(attachmentId);
+
+        // S3에 파일 업로드
+        s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucket).key(attachment.getUuidFileName()).build());
+
+        attachmentRepository.deleteById(attachmentId);
     }
 }
