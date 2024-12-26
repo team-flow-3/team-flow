@@ -112,4 +112,17 @@ public class AttachmentService {
     private String getPublicUrl(String fileName) {
         return String.format("https://%s.s3.amazonaws.com/%s", bucket, fileName);
     }
+
+    /**
+     * 첨부파일 조회 서비스 메서드
+     *
+     * @param cardId 카드 식별자
+     * @return List<AttachmentResponseDto>
+     */
+    public List<AttachmentResponseDto> getAttachments(Long cardId) {
+
+        List<Attachment> attachmentList = attachmentRepository.findAllByCardCardId(cardId);
+
+        return attachmentList.stream().map(AttachmentResponseDto::toDto).toList();
+    }
 }
