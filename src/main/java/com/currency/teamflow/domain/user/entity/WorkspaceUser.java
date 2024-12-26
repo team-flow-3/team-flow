@@ -8,8 +8,8 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "user_workspace")
-public class UserWorkspace extends BaseEntity {
+@Table(name = "workspace_user")
+public class WorkspaceUser extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class UserWorkspace extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role; // 유저 역할
 
-	public UserWorkspace() {}
+	public WorkspaceUser() {}
 
 
 }
