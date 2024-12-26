@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 	private String password; //비밀번호
 
 	@OneToMany(mappedBy = "user")
-	private List<UserWorkspace> userWorkspaces = new ArrayList<>();
+	private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
