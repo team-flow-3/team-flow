@@ -5,7 +5,6 @@ import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -16,21 +15,35 @@ public class Attachment extends BaseEntity {
 	private Long attachmentId;
 
 	@NotNull
-	private String file_type;
+	private String fileName;
 
 	@NotNull
-	private String file_url;
+	private String uuidFileName;
+
+	@NotNull
+	private String fileType;
+
+	@NotNull
+	private String fileUrl;
 
 	@ManyToOne
 	@JoinColumn(name = "card_id")
 	private Card card;
 
-	public Attachment(String file_type, String file_url) {
-		this.file_type = file_type;
-		this.file_url = file_url;
+	public Attachment(String fileName, String uuidFileName, String fileType, String fileUrl, Card card) {
+		this.fileName = fileName;
+		this.uuidFileName = uuidFileName;
+		this.fileType = fileType;
+		this.fileUrl = fileUrl;
+		updateCard(card);
 	}
 
 	public Attachment() {
 
+	}
+
+	public void updateCard(Card card) {
+		this.card = card;
+		card.getAttachments().add(this);
 	}
 }
