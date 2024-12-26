@@ -32,4 +32,10 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
                 () -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
+    boolean existsByWorkspaceIdAndUserId(Long workspaceId, Long userId);
+
+    Optional<WorkspaceUser> findById(Long id);
+
+    Optional<WorkspaceUser> findByWorkspaceIdAndUserId(Long workspaceId, Long userId);
+
 }

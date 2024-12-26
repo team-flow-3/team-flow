@@ -2,6 +2,7 @@ package com.currency.teamflow.domain.workspaceuser.dto;
 
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
+import com.currency.teamflow.global.enums.Role;
 import lombok.Getter;
 
 @Getter
