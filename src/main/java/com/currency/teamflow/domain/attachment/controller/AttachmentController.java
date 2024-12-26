@@ -21,11 +21,34 @@ public class AttachmentController {
     }
 
 
+    /**
+     * 첨부파일 추가 API
+     *
+     * @param cardId 카드 식별자
+     * @param files 첨부파일
+     * @return ResponseEntity<List<AttachmentResponseDto>>
+     * @throws IOException
+     */
     @PostMapping("/cards/{cardId}/attachments")
     public ResponseEntity<List<AttachmentResponseDto>> createAttachments(@PathVariable Long cardId,
                                                                        @Valid @RequestParam(required = false) List<MultipartFile> files) throws IOException {
 
         List<AttachmentResponseDto> responseDtoList = attachmentService.createAttachments(cardId, files);
+
+        return ResponseEntity.ok(responseDtoList);
+    }
+
+
+    /**
+     * 카드 내의 첨부파일 조회 API
+     *
+     * @param cardId 카드 식별자
+     * @return ResponseEntity<List<AttachmentResponseDto>>
+     */
+    @GetMapping("/cards/{cardId}/attachments")
+    public ResponseEntity<List<AttachmentResponseDto>> getAttachments(@PathVariable Long cardId){
+
+        List<AttachmentResponseDto> responseDtoList = attachmentService.getAttachments(cardId);
 
         return ResponseEntity.ok(responseDtoList);
     }
