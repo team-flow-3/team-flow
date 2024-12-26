@@ -81,4 +81,16 @@ public class CommentService {
 
         return CommentResponseDto.toDto(comment);
     }
+
+    /**
+     * 댓글 단건 삭제 서비스 메서드
+     *
+     * @param commentId 댓글 식별자
+     */
+    @Transactional
+    public void deleteComment(Long commentId) {
+
+        // 댓글 삭제
+        commentsRepository.deleteById(commentId);
+    }
 }
