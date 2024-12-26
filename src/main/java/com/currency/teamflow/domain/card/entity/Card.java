@@ -35,10 +35,10 @@ public class Card extends BaseEntity {
 	@OneToMany(mappedBy = "card")
 	private List<Attachment> attachments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<CardManager> cardManagers = new ArrayList<>();
 
 	public Card(String cardTitle, String cardExplanation, LocalDateTime endAt) {
@@ -51,7 +51,29 @@ public class Card extends BaseEntity {
 
 	}
 
-	public void addCardManagers(List<CardManager> cardManagers) {
+	public void addBoardList(BoardList boardList) {
+		this.boardList = boardList;
+		boardList.getCards().add(this);
+	}
+
+	public void updateCardManagers(List<CardManager> cardManagers) {
+		this.cardManagers.clear();
 		this.cardManagers.addAll(cardManagers);
+	}
+
+
+	public void updateCard(String cardTitle, String cardExplanation, LocalDateTime endAt, List<CardManager> cardManagers) {
+		if(cardTitle != null) {
+			this.cardTitle = cardTitle;
+		}
+		if (cardExplanation != null) {
+			this.cardExplanation = cardExplanation;
+		}
+		if (endAt != null) {
+			this.endAt = endAt;
+		}
+		if (cardManagers != null && !cardManagers.isEmpty()) {
+			updateCardManagers(cardManagers);
+		}
 	}
 }

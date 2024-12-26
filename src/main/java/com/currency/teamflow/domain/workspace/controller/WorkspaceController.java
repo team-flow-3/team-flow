@@ -3,7 +3,6 @@ package com.currency.teamflow.domain.workspace.controller;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceResponseDto;
 import com.currency.teamflow.domain.workspace.service.WorkspaceService;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/workspaces")
 public class WorkspaceController {
 
-		private final WorkspaceService workspaceService;
+	private final WorkspaceService workspaceService;
 
 	/**
 	 * 워크스페이스 생성 API
