@@ -4,10 +4,12 @@ import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.domain.boardlist.repository.BoardListRepository;
 import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
+import com.currency.teamflow.domain.card.dto.CardSearchRequestDto;
 import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
 import com.currency.teamflow.domain.card.repository.CardRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,8 +113,33 @@ public class CardService {
     }
 
 
+    /**
+     * 카드 단건 삭제 서비스 메서드
+     *
+     * @param cardId 카드 식별자
+     */
     public void deleteCard(Long cardId) {
 
         cardRepository.deleteById(cardId);
+    }
+
+
+    /**
+     * 카드 조건 조회 서비스 메서드
+     *
+     * @param cardSearchRequestDto 조건 dto
+     * @return List<CardResponseDto>
+     */
+    public List<CardResponseDto> getSearchCards(Pageable pageable, CardSearchRequestDto cardSearchRequestDto) {
+
+        List<Card> cards = cardRepository.findAllSearchByConditions(pageable,
+                cardSearchRequestDto.getBoardId(),
+                cardSearchRequestDto.getCardTitle(),
+                cardSearchRequestDto.getCardExplanation(),
+                cardSearchRequestDto.getEndAt(),
+                cardSearchRequestDto.getCardManagerName()
+        );
+
+        return cards.stream().map(CardResponseDto::toDto).toList();
     }
 }

@@ -3,30 +3,31 @@ package com.currency.teamflow.domain.card.dto;
 import com.currency.teamflow.domain.card.entity.Card;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 public class CardResponseDto {
 
-    private Long cardId;
+    private final Long cardId;
 
-    private String cardTitle;
+    private final String cardTitle;
 
-    private String cardExplanation;
+    private final String cardExplanation;
 
-    private LocalDateTime endAt;
+    private final LocalDate endAt;
 
-    private List<String> userNicknameList;
+    private final List<String> userNicknameList;
 
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
 
-    private LocalDateTime modifiedAt;
+    private final LocalDateTime modifiedAt;
 
     public CardResponseDto(Long cardId,
                            String cardTitle,
                            String cardExplanation,
-                           LocalDateTime endAt,
+                           LocalDate endAt,
                            List<String> userNicknameList,
                            LocalDateTime createdAt,
                            LocalDateTime modifiedAt) {
