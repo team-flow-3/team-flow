@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class Card extends BaseEntity {
 	@NotNull
 	private String cardExplanation;
 
-	private LocalDateTime endAt;
+	private LocalDate endAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "list_id")
@@ -38,10 +38,10 @@ public class Card extends BaseEntity {
 	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Comment> comments = new ArrayList<>();
 
-	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<CardManager> cardManagers = new ArrayList<>();
 
-	public Card(String cardTitle, String cardExplanation, LocalDateTime endAt) {
+	public Card(String cardTitle, String cardExplanation, LocalDate endAt) {
 		this.cardTitle = cardTitle;
 		this.cardExplanation = cardExplanation;
 		this.endAt = endAt;
@@ -62,7 +62,7 @@ public class Card extends BaseEntity {
 	}
 
 
-	public void updateCard(String cardTitle, String cardExplanation, LocalDateTime endAt, List<CardManager> cardManagers) {
+	public void updateCard(String cardTitle, String cardExplanation, LocalDate endAt, List<CardManager> cardManagers) {
 		if(cardTitle != null) {
 			this.cardTitle = cardTitle;
 		}
