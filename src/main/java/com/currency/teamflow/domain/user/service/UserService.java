@@ -2,8 +2,13 @@ package com.currency.teamflow.domain.user.service;
 
 import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
+import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserDto;
+import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.global.config.PasswordEncoder;
+import com.currency.teamflow.global.enums.Auth;
+import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.enums.Status;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
@@ -18,11 +23,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final WorkspaceUserRepository workspaceUserRepository;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       WorkspaceUserRepository workspaceUserRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.workspaceUserRepository = workspaceUserRepository;
     }
 
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
@@ -107,4 +115,51 @@ public class UserService {
 
         return new UserViewResponseDto(user);
     }
+
+    /**
+     * 워크스페이스 관리자가 멤버 역할 변경
+     * @param workspaceId 워크스페이스 ID
+     * @param roleUpdateDto 새로운 역할 정보
+     * @return 성공 메시지
+     */
+    @Transactional
+    public void updateWorkspaceMemberRole(Long loginUserId, Long workspaceId, RoleUpdateDto roleUpdateDto) {
+        // 사용자가 해당 워크 스페이스 속해 있는 지 확인
+        WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserId(workspaceId, loginUserId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FORBIDDEN_PERMISSION));
+
+        // 사용자의 권한 확인.
+        if (workspaceUser.getRole() != Role.WORKSPACE) {
+            throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
+        }
+
+        //스스로 본인 역할 변경 불가
+        if(loginUserId.equals(roleUpdateDto.getMemberId())) {
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+        }
+
+        // 대상 멤버 조회
+        WorkspaceUser targetUser = workspaceUserRepository.findByWorkspaceIdAndUserId(workspaceId, roleUpdateDto.getMemberId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        // 변경하려는 역할이 허용된 역할인지 확인
+        if (!isAllowedRole(roleUpdateDto.getNewRole())) {
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+        }
+
+        // 대상 멤버가 WORKSPACE 관리자라면 변경 불가
+        if (targetUser.getRole() == Role.WORKSPACE) {
+            throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
+        }
+
+        // 역할 변경
+        targetUser.setRole(roleUpdateDto.getNewRole());
+        workspaceUserRepository.save(targetUser);
+    }
+
+    // 허용된 역할 검증
+    private boolean isAllowedRole(Role role) {
+        return role == Role.BOARD || role == Role.READ;
+    }
 }
+

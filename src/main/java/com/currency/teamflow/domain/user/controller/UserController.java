@@ -85,5 +85,25 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
+    /**
+     * 워크스페이스 관리자가 멤버 역할 변경
+     * @param workspaceId 워크스페이스 ID
+     * @param roleUpdateDto 새로운 역할 정보
+     * @return 성공 메시지
+     */
+    @PatchMapping("/workspace/{workspaceId}/roles")
+    public ResponseEntity<String> updateWorkspaceMemberRole(
+            @PathVariable Long workspaceId,
+            @Valid @RequestBody RoleUpdateDto roleUpdateDto,
+            HttpServletRequest servletRequest) {
+
+        //세션이 존재하지 않으면 null로 반환
+        HttpSession session = servletRequest.getSession(false);
+        User loginUser = (User) session.getAttribute("user");
+
+        userService.updateWorkspaceMemberRole(loginUser.getId(), workspaceId, roleUpdateDto);
+
+        return ResponseEntity.ok("멤버의 역할이 성공적으로 변경되었습니다.");
+    }
 
 }
