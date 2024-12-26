@@ -27,7 +27,7 @@ public class Comment extends BaseEntity {
 
 	public Comment(User user, Card card, String comment) {
 		this.user = user;
-		this.card = card;
+		updateCard(card);
 		this.comment = comment;
 	}
 
@@ -37,5 +37,10 @@ public class Comment extends BaseEntity {
 
 	public void updateComment(String comment) {
 		this.comment = comment;
+	}
+
+	public void updateCard(Card card) {
+		this.card = card;
+		card.getComments().add(this);
 	}
 }

@@ -73,4 +73,19 @@ public class CommentController {
 
         return ResponseEntity.ok().body(commentResponseDto);
     }
+
+
+    /**
+     * 댓글 단건 삭제 API
+     *
+     * @param commentId 댓글 식별자
+     * @return ResponseEntity<Void>
+     */
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+
+        commentService.deleteComment(commentId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
