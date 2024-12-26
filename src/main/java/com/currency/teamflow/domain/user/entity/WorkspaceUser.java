@@ -29,5 +29,13 @@ public class WorkspaceUser extends BaseEntity {
 
 	public WorkspaceUser() {}
 
+	public WorkspaceUser(User user, Workspace workspace, Role role) {
+		this.user = user;
+		this.workspace = workspace;
+		this.role = role;
+	}
 
+	public void setRole(Role role) {
+		this.role = role;
+	}
 }
