@@ -21,7 +21,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 아이디가 있는지 검사
     default User findUserByEmailOrElseThrow (String email) {
-        return findUserByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        return findUserByEmail(email).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND)
+        );
+    }
+
+    default User findByUserOrElseThrow (Long userId) {
+        return findById(userId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND)
+        );
     }
 }

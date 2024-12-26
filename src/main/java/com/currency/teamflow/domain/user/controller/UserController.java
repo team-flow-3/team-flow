@@ -6,6 +6,7 @@ import com.currency.teamflow.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,6 +74,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(loginResponseDto);
     }
 
+    /**
+     * 특정 유저 조회
+     * @param userId 유저 ID
+     * @return UserRegisterResponseDto
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserViewResponseDto> findUserById(@PathVariable Long userId) {
+        UserViewResponseDto responseDto = userService.findUserById(userId);
+        return ResponseEntity.ok(responseDto);
+    }
 
 
 }
