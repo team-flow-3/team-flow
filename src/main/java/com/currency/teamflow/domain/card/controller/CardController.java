@@ -2,8 +2,11 @@ package com.currency.teamflow.domain.card.controller;
 
 import com.currency.teamflow.domain.card.dto.CardRequestDto;
 import com.currency.teamflow.domain.card.dto.CardResponseDto;
+import com.currency.teamflow.domain.card.dto.CardSearchRequestDto;
 import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.service.CardService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +44,24 @@ public class CardController {
      * @param listId 리스트 식별자
      * @return ResponseEntity<List<CardResponseDto>> 리스트 내의 카드들 정보 전달
      */
-    @GetMapping("list/{listId}/cards")
+    @GetMapping("/list/{listId}/cards")
     public ResponseEntity<List<CardResponseDto>> getCards(@PathVariable Long listId) {
 
         List<CardResponseDto> cardResponseDtoList = cardService.getCards(listId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(cardResponseDtoList);
+    }
+
+    /**
+     * 카드 전체 조건 조회 API
+     *
+     * @param cardSearchRequestDto 조건 내용 dto
+     * @return ResponseEntity<List<CardResponseDto>>
+     */
+    @GetMapping("/cards")
+    public ResponseEntity<List<CardResponseDto>> getSearchCards(@PageableDefault Pageable pageable, @ModelAttribute CardSearchRequestDto cardSearchRequestDto) {
+
+        List<CardResponseDto> cardResponseDtoList = cardService.getSearchCards(pageable, cardSearchRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDtoList);
     }
@@ -79,6 +96,12 @@ public class CardController {
     }
 
 
+    /**
+     * 카드 단건 삭제 API
+     *
+     * @param cardId 카드 식별자
+     * @return ResponseEntity<String>
+     */
     @DeleteMapping("/cards/{cardId}")
     public ResponseEntity<String> deleteCard(@PathVariable Long cardId) {
 

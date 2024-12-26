@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CardManagerRepository extends JpaRepository<CardManager, Long> {
     void deleteAllByCardCardId(Long cardId);
+
 }
