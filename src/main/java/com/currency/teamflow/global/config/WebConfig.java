@@ -8,11 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    private final LoginInterceptor loginInterceptor;
+
+    private WebConfig(LoginInterceptor loginInterceptor) {
+        this.loginInterceptor = loginInterceptor;
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/**") // 모든 경로에 대해 적용
-                .excludePathPatterns("/static/**", "/public/**"); // 정적 리소스 제외
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/**"); // 모든 경로에 대해 적용
     }
 
 }
