@@ -1,9 +1,6 @@
 package com.currency.teamflow.domain.user.service;
 
-import com.currency.teamflow.domain.user.dto.UserLoginRequestDto;
-import com.currency.teamflow.domain.user.dto.UserPasswordRequestDto;
-import com.currency.teamflow.domain.user.dto.UserRegisterRequestDto;
-import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
+import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.repository.UserRepository;
 import com.currency.teamflow.global.config.PasswordEncoder;
@@ -96,5 +93,18 @@ public class UserService {
 
         // 탈퇴 상태 업데이트
         findUser.updateDeactivatedStatus();
+    }
+
+    /**
+     * 유저 조회
+     * @param userId 유저 ID
+     * @return UserRegisterResponseDto
+     */
+    @Transactional(readOnly = true)
+    public UserViewResponseDto findUserById(Long userId) {
+
+        User user = userRepository.findByUserOrElseThrow(userId);
+
+        return new UserViewResponseDto(user);
     }
 }
