@@ -52,4 +52,19 @@ public class AttachmentController {
 
         return ResponseEntity.ok(responseDtoList);
     }
+
+
+    /**
+     * 첨부파일 삭제 APU
+     *
+     * @param attachmentId 첨부파일 식별자
+     * @return ResponseEntity<Void>
+     */
+    @DeleteMapping("/attachments/{attachmentId}")
+    public ResponseEntity<Void> deleteAttachment(@PathVariable Long attachmentId){
+
+        attachmentService.deleteAttachment(attachmentId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -18,6 +18,9 @@ public class Attachment extends BaseEntity {
 	private String fileName;
 
 	@NotNull
+	private String uuidFileName;
+
+	@NotNull
 	private String fileType;
 
 	@NotNull
@@ -27,8 +30,9 @@ public class Attachment extends BaseEntity {
 	@JoinColumn(name = "card_id")
 	private Card card;
 
-	public Attachment(String fileName, String fileType, String fileUrl, Card card) {
+	public Attachment(String fileName, String uuidFileName, String fileType, String fileUrl, Card card) {
 		this.fileName = fileName;
+		this.uuidFileName = uuidFileName;
 		this.fileType = fileType;
 		this.fileUrl = fileUrl;
 		updateCard(card);
