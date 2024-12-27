@@ -129,7 +129,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.FORBIDDEN_PERMISSION));
 
         // 사용자의 권한 확인.
-        if (workspaceUser.getRole() != Role.WORKSPACE) {
+        if (workspaceUser.getRole() != Role.WORKSPACE_ADMIN) {
             throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
         }
 
@@ -148,7 +148,7 @@ public class UserService {
         }
 
         // 대상 멤버가 WORKSPACE 관리자라면 변경 불가
-        if (targetUser.getRole() == Role.WORKSPACE) {
+        if (targetUser.getRole() == Role.WORKSPACE_ADMIN) {
             throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
         }
 
@@ -159,7 +159,7 @@ public class UserService {
 
     // 허용된 역할 검증
     private boolean isAllowedRole(Role role) {
-        return role == Role.BOARD || role == Role.READ;
+        return role == Role.BOARD_USER || role == Role.READ_ONLY;
     }
 }
 
