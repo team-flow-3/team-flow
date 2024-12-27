@@ -74,7 +74,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentResponseDto);
     }
 
-
     /**
      * 댓글 단건 삭제 API
      *

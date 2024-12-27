@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
 	default Workspace findByIdOrElseThrow(Long workspaceId){
-		return findById(workspaceId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+		return findById(workspaceId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WORKSPACE));
 	}
 
 }

@@ -27,11 +27,12 @@ public enum ErrorCode {
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND,"리소스를 찾을 수 없습니다."),
     NOT_MATCHED(HttpStatus.NOT_FOUND, "초대한 사용자와 이메일이 일치하지 않습니다."),
+    NOT_FOUND_WORKSPACE(HttpStatus.NOT_FOUND, "워크스페이스를 찾을 수 없습니다."),
 
     // 409 CONFLICT
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "중복된 아이디입니다."),
     USER_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 탈퇴한 사용자 아이디입니다."),
-    USER_ALREADY_INVITED(HttpStatus.CONFLICT, "이미 해당 워크스페이스에 초대된 사용자입니다."),
+    USER_ALREADY_INVITED(HttpStatus.CONFLICT, "이미 해당 워크스페이스에 초대된 사용자입니다.")
 
     ;
 
