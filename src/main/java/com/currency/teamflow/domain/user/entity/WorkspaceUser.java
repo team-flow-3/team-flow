@@ -32,7 +32,7 @@ public class WorkspaceUser extends BaseEntity {
 	public WorkspaceUser(User user, Workspace workspace, Role role) {
 		this.user = user;
 		this.workspace = workspace;
-		this.role = Role.READ;
+		this.role = Role.READ_ONLY;
 	}
 
 	public void setRole(Role role) {

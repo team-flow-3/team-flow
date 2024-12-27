@@ -51,7 +51,7 @@ public class WorkspaceController {
 	 * 워크스페이스 멤버 초대 API
 	 * - 워크스페이스 관리자 전용
 	 */
-	@CheckMemberRole(requiredRoles = {Role.WORKSPACE})
+	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN})
 	@PostMapping("/workspaces/{workspaceId}/invite/users/{userId}")
 	public ResponseEntity<WorkspaceInviteResponseDto> inviteUserToWorkspace(
 		@PathVariable Long workspaceId, @PathVariable Long userId,
