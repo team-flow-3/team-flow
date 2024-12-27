@@ -1,6 +1,5 @@
 package com.currency.teamflow.domain.workspace.service;
 
-import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
@@ -88,5 +87,15 @@ public class WorkspaceService {
 		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto =  workspaceRepository.findAllWorkspaceByUserId(userId);
 
 		return WorkspaceAdminResponseDto.toDto(user, userWorkspaceListResponseDto);
+	}
+
+	/**
+	 * 본인 워크스페이스 조회 API
+	 * - 로그인한 유저 전용
+	 */
+	public List<UserWorkspaceListResponseDto> userSearchWorkspace(User loginedUser) {
+		//유저 워크스페이스 리스트 가져오기
+		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto = workspaceRepository.findAllWorkspaceByUserId(loginedUser.getId());
+		return userWorkspaceListResponseDto;
 	}
 }

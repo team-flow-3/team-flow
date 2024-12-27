@@ -17,7 +17,7 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 	}
 
 
-	@Query("SELECT new com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto(wu.workspace.workspaceName, wu.workspace.workspaceExplanation, wu.role) "
+	@Query("SELECT new com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto(wu.workspace.id, wu.workspace.workspaceName, wu.workspace.workspaceExplanation, wu.role) "
 		+ "FROM WorkspaceUser wu "
 		+ "WHERE wu.user.id = :userId")
 	List<UserWorkspaceListResponseDto> findAllWorkspaceByUserId(Long userId);

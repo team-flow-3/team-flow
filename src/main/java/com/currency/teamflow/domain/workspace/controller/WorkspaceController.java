@@ -1,6 +1,7 @@
 package com.currency.teamflow.domain.workspace.controller;
 
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceAdminResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteResponseDto;
@@ -13,7 +14,7 @@ import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -85,4 +86,19 @@ public class WorkspaceController {
 
 		return new ResponseEntity<>(workspaceAdminResponseDto, HttpStatus.OK);
 	};
+
+	/**
+	 * 본인 워크스페이스 조회 API
+	 * - 로그인한 유저 전용
+	 */
+	@GetMapping("/workspaces")
+	public ResponseEntity<List<UserWorkspaceListResponseDto>> userSearchWorkspace(
+		HttpServletRequest httpServletRequest){
+		HttpSession httpSession = httpServletRequest.getSession(false);//session이 존재하지 않으면 기존 세션 반환
+		User loginedUser = (User) httpSession.getAttribute("user");
+
+		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto = workspaceService.userSearchWorkspace(loginedUser);
+
+		return new ResponseEntity<>(userWorkspaceListResponseDto, HttpStatus.OK);
+	}
 }

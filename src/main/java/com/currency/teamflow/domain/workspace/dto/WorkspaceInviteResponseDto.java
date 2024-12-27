@@ -1,9 +1,7 @@
 package com.currency.teamflow.domain.workspace.dto;
 
-import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Getter;
 
 @Getter
