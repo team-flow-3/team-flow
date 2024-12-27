@@ -67,7 +67,7 @@ public class WorkspaceService {
 		}
 
 		//유저 초대 & 저장
-		WorkspaceUser workspaceUserInvite = new WorkspaceUser(user, workspace, Role.READ);
+		WorkspaceUser workspaceUserInvite = new WorkspaceUser(user, workspace, Role.READ_ONLY);
 		WorkspaceUser savedWorkspaceUserInvite = workspaceUserRepository.save(workspaceUserInvite);
 
 		return WorkspaceInviteResponseDto.toDto(savedWorkspaceUserInvite.getWorkspace(), user.getId());
