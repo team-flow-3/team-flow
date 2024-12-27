@@ -39,4 +39,9 @@ public class Workspace extends BaseEntity {
 		this.workspaceExplanation = workspaceExplanation;
 	}
 
+	//워크스페이스 정보 수정
+	public void updateWorkspace(String workspaceName, String workspaceExplanation) {
+		this.workspaceName = workspaceName;
+		this.workspaceExplanation = workspaceExplanation;
+	}
 }

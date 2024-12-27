@@ -15,20 +15,20 @@ import java.util.Optional;
 public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Long> {
 
     @Query("SELECT new com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserDto(w, u) " +
-            "FROM Workspace w, user u " +
-            "WHERE w.id = :workspaceId AND u.id = :userId")
+        "FROM Workspace w, user u " +
+        "WHERE w.id = :workspaceId AND u.id = :userId")
     Optional<WorkspaceUserDto> findWorkspaceAndUserByIds(@Param("workspaceId") Long workspaceId,
-                                                            @Param("userId") Long userId);
+        @Param("userId") Long userId);
 
     default WorkspaceUserDto findByWorkspaceAndUserByIdsElseThrow(Long workspaceId, Long userId) {
         return findWorkspaceAndUserByIds(workspaceId, userId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND)
+            () -> new CustomException(ErrorCode.NOT_FOUND)
         );
     }
 
     default WorkspaceUser findByWorkspaceOrElseThrow(Long workspaceUserId) {
         return findById(workspaceUserId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND));
+            () -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
     boolean existsByWorkspaceIdAndUserId(Long workspaceId, Long userId);
@@ -36,5 +36,10 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
     Optional<WorkspaceUser> findById(Long id);
 
     Optional<WorkspaceUser> findByWorkspaceIdAndUserId(Long workspaceId, Long userId);
+
+    @Query("SELECT wu "
+        + "FROM WorkspaceUser wu "
+        + "WHERE wu.user.id = :userId AND wu.workspace.id = :workspaceId")
+    Optional<WorkspaceUser> findByWorkspaceIdAndUserByIdOrElseThrow(Long userId, Long workspaceId);
 
 }
