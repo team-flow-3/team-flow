@@ -46,6 +46,10 @@ dependencies {
     //s3
     implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.1.1'
     implementation 'software.amazon.awssdk:s3:2.20.89'
+    //Slack
+    implementation("com.slack.api:bolt:1.44.2") // 핵심 라이브러리
+    implementation("com.slack.api:bolt-servlet:1.44.2") // Spring Boot 서블릿 지원
+    implementation("com.slack.api:bolt-jetty:1.44.2")
 }
 
 tasks.named('test') {
