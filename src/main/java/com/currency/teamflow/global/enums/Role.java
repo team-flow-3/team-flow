@@ -1,5 +1,5 @@
 package com.currency.teamflow.global.enums;
 
 public enum Role {
-    WORKSPACE, BOARD, READ
+    WORKSPACE_ADMIN, BOARD_USER, READ_ONLY
 }

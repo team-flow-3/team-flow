@@ -20,7 +20,6 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
     Optional<WorkspaceUserDto> findWorkspaceAndUserByIds(@Param("workspaceId") Long workspaceId,
                                                             @Param("userId") Long userId);
 
-
     default WorkspaceUserDto findByWorkspaceAndUserByIdsElseThrow(Long workspaceId, Long userId) {
         return findWorkspaceAndUserByIds(workspaceId, userId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)

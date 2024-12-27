@@ -1,9 +1,16 @@
 package com.currency.teamflow.domain.workspaceuser.controller;
 
+import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserResponseDto;
+import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.domain.workspaceuser.service.WorkspaceUserService;
 import com.currency.teamflow.global.annotation.CheckUserRole;
 import com.currency.teamflow.global.enums.Auth;
+import com.currency.teamflow.global.error.errorcode.ErrorCode;
+import com.currency.teamflow.global.error.exception.CustomException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +54,23 @@ public class WorkspaceUserController {
 
         return ResponseEntity.ok("워크스페이스 관리자 삭제 완료");
     }
+
+    @PostMapping("/workspaces/{workspaceId}/choice")
+    public ResponseEntity<String> selectWorkspace(
+            @PathVariable Long workspaceId,
+            HttpServletRequest servletRequest) {
+
+        HttpSession session = servletRequest.getSession(false);
+        User loginUser = (User) session.getAttribute("user");
+
+        WorkspaceUser workspaceUser = workspaceUserService.findWorkspaceUser(workspaceId, loginUser.getId());
+
+        session.setAttribute("workspaceUser", workspaceUser);
+
+        return ResponseEntity.ok("워크스페이스 선택 완료");
+    }
+
 }
+
+
 
