@@ -1,12 +1,17 @@
 package com.currency.teamflow.domain.workspace.entity;
 
+
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.base.BaseEntity;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 
 
@@ -24,6 +29,9 @@ public class Workspace extends BaseEntity {
 	@NotNull
 	private String workspaceExplanation;//워크스페이스 설명
 
+	@OneToMany(mappedBy = "workspace")
+	private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+
 	public Workspace() {
 	}
 
@@ -31,4 +39,6 @@ public class Workspace extends BaseEntity {
 		this.workspaceName = workspaceName;
 		this.workspaceExplanation = workspaceExplanation;
 	}
+
+
 }

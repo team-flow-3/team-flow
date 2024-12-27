@@ -12,6 +12,7 @@ public enum ErrorCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호 형식이 올바르지 않습니다."),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "이메일 형식이 올바르지 않습니다."),
+    NOT_INVITE_YOURSELF(HttpStatus.BAD_REQUEST, "자기 자신은 워크스페이스에 초대할 수 없습니다"),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -25,11 +26,13 @@ public enum ErrorCode {
 
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND,"리소스를 찾을 수 없습니다."),
+    NOT_MATCHED(HttpStatus.NOT_FOUND, "초대한 사용자와 이메일이 일치하지 않습니다."),
+    NOT_FOUND_WORKSPACE(HttpStatus.NOT_FOUND, "워크스페이스를 찾을 수 없습니다."),
 
     // 409 CONFLICT
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "중복된 아이디입니다."),
     USER_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 탈퇴한 사용자 아이디입니다."),
-
+    USER_ALREADY_INVITED(HttpStatus.CONFLICT, "이미 해당 워크스페이스에 초대된 사용자입니다.")
 
     ;
 
