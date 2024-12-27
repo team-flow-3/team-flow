@@ -1,8 +1,11 @@
 package com.currency.teamflow.domain.workspace.service;
 
+import com.currency.teamflow.domain.user.dto.UserRegisterResponseDto;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
+import com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto;
+import com.currency.teamflow.domain.workspace.dto.WorkspaceAdminResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceResponseDto;
@@ -12,6 +15,7 @@ import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserReposi
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,10 +71,22 @@ public class WorkspaceService {
 		}
 
 		//유저 초대 & 저장
-		WorkspaceUser workspaceUserInvite = new WorkspaceUser(user, workspace, Role.READ);
+		WorkspaceUser workspaceUserInvite = new WorkspaceUser(user, workspace, Role.READ_ONLY);
 		WorkspaceUser savedWorkspaceUserInvite = workspaceUserRepository.save(workspaceUserInvite);
 
 		return WorkspaceInviteResponseDto.toDto(savedWorkspaceUserInvite.getWorkspace(), user.getId());
 	}
 
+	/**
+	 * 유저 워크스페이스 조회 API
+	 * - 관리자 전용
+	 */
+	public WorkspaceAdminResponseDto adminSearchUserWorkspace(Long userId) {
+		//유저 존재하는지 확인
+		User user = userRepository.findByUserOrElseThrow(userId);
+		//유저 워크스페이스 리스트 가져오기
+		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto =  workspaceRepository.findAllWorkspaceByUserId(userId);
+
+		return WorkspaceAdminResponseDto.toDto(user, userWorkspaceListResponseDto);
+	}
 }

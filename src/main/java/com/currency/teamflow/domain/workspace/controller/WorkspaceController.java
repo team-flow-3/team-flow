@@ -1,6 +1,7 @@
 package com.currency.teamflow.domain.workspace.controller;
 
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.workspace.dto.WorkspaceAdminResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceRequestDto;
@@ -12,10 +13,12 @@ import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,5 +72,17 @@ public class WorkspaceController {
 		);
 
 		return new ResponseEntity<>(workspaceInviteResponseDto, HttpStatus.OK);
+	};
+
+	/**
+	 * 유저 워크스페이스 조회 API
+	 * - 관리자 전용
+	 */
+	@CheckUserRole(requiredAuthorities = {Auth.ADMIN})
+	@GetMapping("/users/{userId}/workspaces")
+	public ResponseEntity<WorkspaceAdminResponseDto> adminSearchUserWorkspace(@PathVariable Long userId){
+		WorkspaceAdminResponseDto workspaceAdminResponseDto = workspaceService.adminSearchUserWorkspace(userId);
+
+		return new ResponseEntity<>(workspaceAdminResponseDto, HttpStatus.OK);
 	};
 }
