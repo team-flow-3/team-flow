@@ -16,4 +16,5 @@ public class WorkspaceRequestDto {
 		this.workspaceName = workspaceName;
 		this.workspaceExplanation = workspaceExplanation;
 	}
+
 }

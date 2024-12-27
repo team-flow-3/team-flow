@@ -7,6 +7,7 @@ import com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceAdminResponseDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceInviteResponseDto;
+import com.currency.teamflow.domain.workspace.dto.WorkspaceRequestDto;
 import com.currency.teamflow.domain.workspace.dto.WorkspaceResponseDto;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import com.currency.teamflow.domain.workspace.repository.WorkspaceRepository;
@@ -98,4 +99,29 @@ public class WorkspaceService {
 		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto = workspaceRepository.findAllWorkspaceByUserId(loginedUser.getId());
 		return userWorkspaceListResponseDto;
 	}
+
+	/**
+	 * 워크스페이스 수정 API
+	 * - 관리자 전용
+	 * TODO : n+1 발생 쿼리 개선
+	 */
+	@Transactional
+	public WorkspaceResponseDto updateWorkspace(User loginedUser, Long workspaceId, WorkspaceRequestDto workspaceRequestDto) {
+		//로그 확인
+		log.info("loginedUser.getId() : {}", loginedUser.getId());
+		log.info("workspaceId : {}", workspaceId);
+		//로그인한 유저가 관리하는 워크스페이스인지 확인
+		WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserByIdOrElseThrow(loginedUser.getId(), workspaceId)
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WORKSPACE));
+
+		//워크스페이스 정보 가져오기
+		Workspace workspace = workspaceRepository.findByIdOrElseThrow(workspaceId);
+		//정보 수정하기
+		workspace.updateWorkspace(workspaceRequestDto.getWorkspaceName(), workspaceRequestDto.getWorkspaceExplanation());
+		//수정된 정보 저장
+		workspaceRepository.save(workspace);
+
+		return WorkspaceResponseDto.toDto(workspace);
+	}
+
 }
