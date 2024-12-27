@@ -103,7 +103,6 @@ public class WorkspaceService {
 	/**
 	 * 워크스페이스 수정 API
 	 * - 관리자 전용
-	 * TODO : n+1 발생 쿼리 개선
 	 */
 	@Transactional
 	public WorkspaceResponseDto updateWorkspace(User loginedUser, Long workspaceId, WorkspaceRequestDto workspaceRequestDto) {
@@ -124,4 +123,19 @@ public class WorkspaceService {
 		return WorkspaceResponseDto.toDto(workspace);
 	}
 
+	/**
+	 * 워크스페이스 삭제 API
+	 * - 워크스페이스 관리자 전용
+	 */
+	@Transactional
+	public void deleteWorkspace(Long workspaceId, User loginedUser) {
+		//로그인한 유저가 관리하는 워크스페이스인지 확인
+		WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserByIdOrElseThrow(loginedUser.getId(), workspaceId)
+			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WORKSPACE));
+
+		//워크스페이스 정보 가져오기
+		Workspace workspace = workspaceRepository.findByIdOrElseThrow(workspaceId);
+
+		workspaceRepository.delete(workspace);
+	}
 }
