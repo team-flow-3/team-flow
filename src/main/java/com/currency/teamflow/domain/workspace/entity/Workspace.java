@@ -1,6 +1,5 @@
 package com.currency.teamflow.domain.workspace.entity;
 
-
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.OneToMany;
@@ -39,6 +38,5 @@ public class Workspace extends BaseEntity {
 		this.workspaceName = workspaceName;
 		this.workspaceExplanation = workspaceExplanation;
 	}
-
 
 }
