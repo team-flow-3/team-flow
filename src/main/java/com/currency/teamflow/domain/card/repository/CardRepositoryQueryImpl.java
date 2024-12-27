@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.currency.teamflow.domain.boardlist.entity.QBoardList.boardList;
 import static com.currency.teamflow.domain.card.entity.QCard.card;
 import static com.currency.teamflow.domain.card.entity.QCardManager.cardManager;
 import static com.currency.teamflow.domain.user.entity.QUser.user;
@@ -21,10 +22,15 @@ public class CardRepositoryQueryImpl implements CardRepositoryQuery {
     }
 
     @Override
-    public List<Card> findAllSearchByConditions(Pageable pageable, Long boardId, String cardTitle, String cardExplanation, String endAt, String cardMangerName) {
+    public List<Card> findAllSearchByConditions(Pageable pageable,
+                                                Long boardId,
+                                                String cardTitle,
+                                                String cardExplanation,
+                                                String endAt,
+                                                String cardMangerName) {
         return queryFactory.selectFrom(card)
+                .leftJoin(card.boardList, boardList)
                 .leftJoin(card.cardManagers, cardManager)
-                .fetchJoin()
                 .leftJoin(cardManager.user, user)
                 .fetchJoin()
                 .where(
