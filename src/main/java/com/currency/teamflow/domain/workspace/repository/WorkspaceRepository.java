@@ -21,4 +21,5 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 		+ "FROM WorkspaceUser wu "
 		+ "WHERE wu.user.id = :userId")
 	List<UserWorkspaceListResponseDto> findAllWorkspaceByUserId(Long userId);
+
 }
