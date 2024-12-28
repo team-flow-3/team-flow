@@ -10,10 +10,10 @@ public class BoardListRequestDto {
 	private final Long boardId;//워크스페이스 id(외래키)
 
 	@NotNull
-	private final String ListTitle;//리스트 제목
+	private final String boardListTitle;//리스트 제목
 
-	public BoardListRequestDto(Long boardId, String listTitle) {
+	public BoardListRequestDto(Long boardId, String boardListTitle) {
 		this.boardId = boardId;
-		ListTitle = listTitle;
+		this.boardListTitle = boardListTitle;
 	}
 }
