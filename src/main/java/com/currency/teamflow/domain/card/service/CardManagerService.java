@@ -4,7 +4,6 @@ import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
 import com.currency.teamflow.domain.card.repository.CardManagerRepository;
 import com.currency.teamflow.domain.user.entity.User;
-import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
@@ -41,15 +40,16 @@ public class CardManagerService {
 
         // 카드매니저 등록하기
         for (User user : users) {
-            // 해당 워크스페이스에 속한 유저인지 확인
-            for(WorkspaceUser workspaceUser : user.getWorkspaceUsers()) {
-                if(!workspaceUser.getWorkspace().getId().equals(workspaceId)){
-                    throw new CustomException(ErrorCode.NOT_FOUND);
-                }
+            boolean isUserInWorkspace = user.getWorkspaceUsers().stream()
+                    .anyMatch(wu -> wu.getWorkspace().getId().equals(workspaceId));
+
+            if(!isUserInWorkspace) {
+                throw new CustomException(ErrorCode.valueOf("no match"));
             }
 
             CardManager cardManager = new CardManager(card, user);
             cardManagers.add(cardManager);
+
         }
 
         // 카드 담당자 중간 테이블 저장

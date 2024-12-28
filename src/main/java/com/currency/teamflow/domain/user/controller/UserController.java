@@ -3,9 +3,9 @@ package com.currency.teamflow.domain.user.controller;
 import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.service.UserService;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +83,9 @@ public class UserController {
     public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
                                                        Authentication authentication) {
 
-        User loginUser = (User) authentication.getDetails();
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
 
         userService.deleteUser(loginUser.getId(), requestDto);
 
@@ -114,11 +116,11 @@ public class UserController {
     public ResponseEntity<String> updateWorkspaceMemberRole(
             @PathVariable Long workspaceId,
             @Valid @RequestBody RoleUpdateDto roleUpdateDto,
-            HttpServletRequest servletRequest) {
+            Authentication authentication) {
 
-        //세션이 존재하지 않으면 null로 반환
-        HttpSession session = servletRequest.getSession(false);
-        User loginUser = (User) session.getAttribute("user");
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
 
         userService.updateWorkspaceMemberRole(loginUser.getId(), workspaceId, roleUpdateDto);
 

@@ -46,10 +46,12 @@ public class WebSecurityConfig {
     /**
      * 화이트 리스트.
      */
-    private static final String[] WHITE_LIST = {"/users/register", "/users/login", "/favicon.ico",
-            "/error"};
+    private static final String[] WHITE_LIST = {"/users/register", "/users/login", "/error"};
 
-    public WebSecurityConfig(JwtAuthFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, AuthenticationEntryPoint authEntryPoint, AccessDeniedHandler accessDeniedHandler) {
+    public WebSecurityConfig(JwtAuthFilter jwtAuthFilter,
+                             AuthenticationProvider authenticationProvider,
+                             AuthenticationEntryPoint authEntryPoint,
+                             AccessDeniedHandler accessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationProvider = authenticationProvider;
         this.authEntryPoint = authEntryPoint;
@@ -105,12 +107,7 @@ public class WebSecurityConfig {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy(
-                // "ROLE_ADMIN > ROLE_STAFF\nROLE_ADMIN > ROLE_USER"
-                """
-                    ROLE_ADMIN > ROLE_STAFF
-                    ROLE_ADMIN > ROLE_USER
-                    """);
+        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_USER");
     }
 
     /**

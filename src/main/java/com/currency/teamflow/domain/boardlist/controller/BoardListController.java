@@ -5,13 +5,13 @@ import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.boardlist.service.BoardListService;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import com.currency.teamflow.global.enums.Role;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +39,11 @@ public class BoardListController {
 	@PostMapping
 	public ResponseEntity<BoardListResponseDto> createBoardList(
 		@Valid @RequestBody BoardListRequestDto boardListRequestDto,
-		HttpServletRequest httpServletRequest) {
+		Authentication authentication) {
 
-		HttpSession httpSession = httpServletRequest.getSession(false);
-		User loginedUser = (User) httpSession.getAttribute("user");
+		// 인증 정보 내의 유저 정보 가져오기
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User loginedUser = userDetails.getUser();
 
 		BoardListResponseDto boardListResponseDto = boardListService.createBoardList(
 			boardListRequestDto,
