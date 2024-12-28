@@ -3,15 +3,14 @@ package com.currency.teamflow.domain.workspaceuser.controller;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserResponseDto;
-import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.domain.workspaceuser.service.WorkspaceUserService;
 import com.currency.teamflow.global.annotation.CheckUserRole;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import com.currency.teamflow.global.enums.Auth;
-import com.currency.teamflow.global.error.errorcode.ErrorCode;
-import com.currency.teamflow.global.error.exception.CustomException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -58,13 +57,18 @@ public class WorkspaceUserController {
     @PostMapping("/workspaces/{workspaceId}/choice")
     public ResponseEntity<String> selectWorkspace(
             @PathVariable Long workspaceId,
-            HttpServletRequest servletRequest) {
+            HttpServletRequest servletRequest,
+            Authentication authentication) {
 
-        HttpSession session = servletRequest.getSession(false);
-        User loginUser = (User) session.getAttribute("user");
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
 
+        // 워크스페이스 유저 테이블 정보 가져오기
         WorkspaceUser workspaceUser = workspaceUserService.findWorkspaceUser(workspaceId, loginUser.getId());
 
+        // 세션에 워크스페이스 유저 데이터 정보 저장
+        HttpSession session = servletRequest.getSession();
         session.setAttribute("workspaceUser", workspaceUser);
 
         return ResponseEntity.ok("워크스페이스 선택 완료");

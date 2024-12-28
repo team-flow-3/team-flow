@@ -46,7 +46,7 @@ public class WebSecurityConfig {
     /**
      * 화이트 리스트.
      */
-    private static final String[] WHITE_LIST = {"/accounts/login", "/accounts/join", "/favicon.ico",
+    private static final String[] WHITE_LIST = {"/users/register", "/users/login", "/favicon.ico",
             "/error"};
 
     public WebSecurityConfig(JwtAuthFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, AuthenticationEntryPoint authEntryPoint, AccessDeniedHandler accessDeniedHandler) {

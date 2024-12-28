@@ -2,13 +2,15 @@ package com.currency.teamflow.global.interceptor;
 
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.global.annotation.CheckUserRole;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,14 +33,18 @@ public class UserRoleInterceptor implements HandlerInterceptor {
                 return true;
             }
 
-            // 세션 확인
-            HttpSession session = request.getSession(false);
-            if (session == null || session.getAttribute("user") == null) {
+            // 인증 정보 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            // 인증 정보가 없으면 예러
+            if (authentication == null) {
                 throw new CustomException(ErrorCode.UNAUTHORIZED);
             }
 
-            // 사용자 권한 확인
-            User user = (User) session.getAttribute("user");
+            // 인증 정보 내의 유저 정보 가져오기
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userDetails.getUser();
+
             Auth[] requiredAuthorities = checkUserRole.requiredAuthorities();
 
             if (!Arrays.asList(requiredAuthorities).contains(user.getAuth())) {
