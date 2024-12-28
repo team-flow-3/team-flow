@@ -2,13 +2,16 @@ package com.currency.teamflow.domain.user.controller;
 
 import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
-import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,35 +40,50 @@ public class UserController {
     /**
      * 로그인 기능
      * @param requestDto
-     * @param servletRequest
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
-                                                      HttpServletRequest servletRequest) {
-        User user = userService.loginUser(requestDto);
-        HttpSession session = servletRequest.getSession();
-        session.setAttribute("user", user);
+    public ResponseEntity<JwtAuthResponse> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto) {
+        JwtAuthResponse jwtAuthResponse = userService.loginUser(requestDto);
 
-        UserResponseDto loginResponseDto
-                = new UserResponseDto(user.getId(), user.getEmail(), "로그인되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(jwtAuthResponse);
+    }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
+    /**
+     * 로그아웃 기능
+     * @param request
+     * @param response
+     * @param authentication
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request,
+                                                             HttpServletResponse response, Authentication authentication)
+            throws UsernameNotFoundException {
+
+        // 인증 정보가 있다면 로그아웃 처리.
+        if (authentication != null && authentication.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+            return ResponseEntity.ok("로그아웃 성공.");
+        }
+
+        // 인증 정보가 없다면 인증되지 않았기 때문에 로그인 필요.
+        throw new UsernameNotFoundException("로그인이 먼저 필요합니다.");
     }
 
 
     /**
      * 회원 탈퇴
      * @param requestDto
-     * @param servletRequest
      * @return
      */
     @DeleteMapping
     public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
-                                                       HttpServletRequest servletRequest) {
-        //세션이 존재하지 않으면 null로 반환
-        HttpSession session = servletRequest.getSession(false);
-        User loginUser = (User) session.getAttribute("user");
+                                                       Authentication authentication) {
+
+        User loginUser = (User) authentication.getDetails();
 
         userService.deleteUser(loginUser.getId(), requestDto);
 
