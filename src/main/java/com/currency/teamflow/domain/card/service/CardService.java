@@ -50,7 +50,7 @@ public class CardService {
         card.updateCardManagers(cardManagers);
 
         // 리스트 저장
-        BoardList boardList = boardListRepository.findByIdOrElseThrow(cardRequestDto.getListId());
+        BoardList boardList = boardListRepository.findByIdOrElseThrow(cardRequestDto.getBoardListId());
         card.addBoardList(boardList);
 
         // 카드 저장
@@ -75,12 +75,12 @@ public class CardService {
     /**
      * 리스트 내의 카드 전체 조회 서비스 메서드
      *
-     * @param listId 리스트 식별자
+     * @param boardListId 리스트 식별자
      * @return List<CardResponseDto>
      */
-    public List<CardResponseDto> getCards(Long listId) {
+    public List<CardResponseDto> getCards(Long boardListId) {
 
-        List<Card> cardList = cardRepository.findAllByBoardListId(listId);
+        List<Card> cardList = cardRepository.findAllByBoardListId(boardListId);
 
         return cardList.stream().map(CardResponseDto::toDto).toList();
     }
