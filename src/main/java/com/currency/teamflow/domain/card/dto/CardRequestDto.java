@@ -10,7 +10,7 @@ import java.util.List;
 public class CardRequestDto {
 
     @NotNull
-    private final Long listId;
+    private final Long boardListId;
 
     @NotNull
     private final String cardTitle;
@@ -22,8 +22,8 @@ public class CardRequestDto {
 
     private final List<Long> userIds;
 
-    public CardRequestDto(Long listId, String cardTitle, String cardExplanation, LocalDate endAt, List<Long> userIds) {
-        this.listId = listId;
+    public CardRequestDto(Long boardListId, String cardTitle, String cardExplanation, LocalDate endAt, List<Long> userIds) {
+        this.boardListId = boardListId;
         this.cardTitle = cardTitle;
         this.cardExplanation = cardExplanation;
         this.endAt = endAt;

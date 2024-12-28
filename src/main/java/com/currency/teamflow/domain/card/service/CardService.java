@@ -38,19 +38,19 @@ public class CardService {
      * @return CardResponseDto
      */
     @Transactional
-    public CardResponseDto createCard(CardRequestDto cardRequestDto) {
+    public CardResponseDto createCard(CardRequestDto cardRequestDto, Long workspaceId) {
 
         // 카드 생성
         Card card = new Card(cardRequestDto.getCardTitle(), cardRequestDto.getCardExplanation(), cardRequestDto.getEndAt());
 
         // 카드 담당자 중간테이블 데이터 리스트 생성
-        List<CardManager> cardManagers = cardManagerService.createCardManager(card, cardRequestDto.getUserIds());
+        List<CardManager> cardManagers = cardManagerService.createCardManager(card, cardRequestDto.getUserIds(), workspaceId);
 
         // 카드 담당자 등록
         card.updateCardManagers(cardManagers);
 
         // 리스트 저장
-        BoardList boardList = boardListRepository.findByIdOrElseThrow(cardRequestDto.getListId());
+        BoardList boardList = boardListRepository.findByIdOrElseThrow(cardRequestDto.getBoardListId());
         card.addBoardList(boardList);
 
         // 카드 저장
@@ -75,12 +75,12 @@ public class CardService {
     /**
      * 리스트 내의 카드 전체 조회 서비스 메서드
      *
-     * @param listId 리스트 식별자
+     * @param boardListId 리스트 식별자
      * @return List<CardResponseDto>
      */
-    public List<CardResponseDto> getCards(Long listId) {
+    public List<CardResponseDto> getCards(Long boardListId) {
 
-        List<Card> cardList = cardRepository.findAllByBoardListId(listId);
+        List<Card> cardList = cardRepository.findAllByBoardListId(boardListId);
 
         return cardList.stream().map(CardResponseDto::toDto).toList();
     }
@@ -93,12 +93,16 @@ public class CardService {
      * @return CardResponseDto
      */
     @Transactional
-    public CardResponseDto updateCard(Long cardId, CardUpdateRequestDto cardUpdateRequestDto) {
+    public CardResponseDto updateCard(Long cardId, CardUpdateRequestDto cardUpdateRequestDto, Long workspaceId) {
 
         Card card = cardRepository.findByIdOrElseThrow(cardId);
 
         // 카드 담당자 변경
-        List<CardManager> cardManagers = cardManagerService.updateCardManager(card, cardUpdateRequestDto.getUserIds());
+        List<CardManager> cardManagers = cardManagerService.updateCardManager(
+                card,
+                cardUpdateRequestDto.getUserIds(),
+                workspaceId
+        );
 
         // 카드 내용 수정
         card.updateCard(cardUpdateRequestDto.getCardTitle(),
