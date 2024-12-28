@@ -5,6 +5,9 @@ import com.currency.teamflow.domain.card.dto.CardResponseDto;
 import com.currency.teamflow.domain.card.dto.CardSearchRequestDto;
 import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.service.CardService;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -31,9 +34,13 @@ public class CardController {
      *
      */
     @PostMapping("/cards")
-    public ResponseEntity<CardResponseDto> createCard(@RequestBody CardRequestDto cardRequestDto) {
+    public ResponseEntity<CardResponseDto> createCard(@RequestBody CardRequestDto cardRequestDto,
+                                                      HttpServletRequest request) {
 
-        CardResponseDto cardResponseDto = cardService.createCard(cardRequestDto);
+        HttpSession session = request.getSession(false);
+        WorkspaceUser workspaceUser = (WorkspaceUser) session.getAttribute("workspaceUser");
+
+        CardResponseDto cardResponseDto = cardService.createCard(cardRequestDto, workspaceUser.getWorkspace().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
     }
@@ -41,13 +48,13 @@ public class CardController {
     /**
      * 리스트 내의 카드 전체 조회 API
      *
-     * @param listId 리스트 식별자
+     * @param boardListId 리스트 식별자
      * @return ResponseEntity<List<CardResponseDto>> 리스트 내의 카드들 정보 전달
      */
-    @GetMapping("/list/{listId}/cards")
-    public ResponseEntity<List<CardResponseDto>> getCards(@PathVariable Long listId) {
+    @GetMapping("/list/{boardListId}/cards")
+    public ResponseEntity<List<CardResponseDto>> getCards(@PathVariable Long boardListId) {
 
-        List<CardResponseDto> cardResponseDtoList = cardService.getCards(listId);
+        List<CardResponseDto> cardResponseDtoList = cardService.getCards(boardListId);
 
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDtoList);
     }
@@ -88,9 +95,18 @@ public class CardController {
      * @return ResponseEntity<CardResponseDto>
      */
     @PutMapping("/cards/{cardId}")
-    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId, @RequestBody CardUpdateRequestDto cardUpdateRequestDto) {
+    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId,
+                                                      @RequestBody CardUpdateRequestDto cardUpdateRequestDto,
+                                                      HttpServletRequest request) {
 
-        CardResponseDto cardResponseDto = cardService.updateCard(cardId, cardUpdateRequestDto);
+        HttpSession session = request.getSession(false);
+        WorkspaceUser workspaceUser = (WorkspaceUser) session.getAttribute("workspaceUser");
+
+        CardResponseDto cardResponseDto = cardService.updateCard(
+                cardId,
+                cardUpdateRequestDto,
+                workspaceUser.getWorkspace().getId()
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }

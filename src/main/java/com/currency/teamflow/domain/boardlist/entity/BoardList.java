@@ -23,20 +23,20 @@ public class BoardList extends BaseEntity {
     private Board board;//보드 id(외래키)
 
     @NotNull
-    private String listTitle;//리스트 제목
+    private String boardListTitle;//리스트 제목
 
     @NotNull
     private Long array;//리스트 순서
 
-    @OneToMany(mappedBy = "boardList")
+    @OneToMany(mappedBy = "boardList", cascade = CascadeType.REMOVE)
     private List<Card> cards = new ArrayList<>();
 
     public BoardList() {
     }
 
-    public BoardList(Board board, String listTitle) {
+    public BoardList(Board board, String boardListTitle) {
         updateBoard(board);
-        this.listTitle = listTitle;
+        this.boardListTitle = boardListTitle;
     }
 
     public void updateBoard(Board board){

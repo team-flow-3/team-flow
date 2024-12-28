@@ -109,18 +109,24 @@ public class WorkspaceService {
 		//로그 확인
 		log.info("loginedUser.getId() : {}", loginedUser.getId());
 		log.info("workspaceId : {}", workspaceId);
+
 		//로그인한 유저가 관리하는 워크스페이스인지 확인
 		WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserByIdOrElseThrow(loginedUser.getId(), workspaceId)
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WORKSPACE));
+		//권한 WORKSPACE_ADMIN 확인
+		if(!workspaceUser.getRole().equals(Role.WORKSPACE_ADMIN)){
+			throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
+		}
 
+		log.info("workspace.getId() : {}", workspaceUser.getId());
 		//워크스페이스 정보 가져오기
-		Workspace workspace = workspaceRepository.findByIdOrElseThrow(workspaceId);
+		Workspace workspaceInformation = workspaceRepository.findByIdOrElseThrow(workspaceUser.getWorkspace().getId());
 		//정보 수정하기
-		workspace.updateWorkspace(workspaceRequestDto.getWorkspaceName(), workspaceRequestDto.getWorkspaceExplanation());
+		workspaceInformation.updateWorkspace(workspaceRequestDto.getWorkspaceName(), workspaceRequestDto.getWorkspaceExplanation());
 		//수정된 정보 저장
-		workspaceRepository.save(workspace);
+		workspaceRepository.save(workspaceInformation);
 
-		return WorkspaceResponseDto.toDto(workspace);
+		return WorkspaceResponseDto.toDto(workspaceInformation);
 	}
 
 	/**
