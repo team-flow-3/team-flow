@@ -55,7 +55,7 @@ public class WorkspaceController {
 		);
 
 		return new ResponseEntity<>(workspaceResponseDto, HttpStatus.CREATED);
-	};
+	}
 
 	/**
 	 * 워크스페이스 멤버 초대 API
@@ -79,7 +79,7 @@ public class WorkspaceController {
 		);
 
 		return new ResponseEntity<>(workspaceInviteResponseDto, HttpStatus.OK);
-	};
+	}
 
 	/**
 	 * 유저 워크스페이스 조회 API
@@ -91,7 +91,7 @@ public class WorkspaceController {
 		WorkspaceAdminResponseDto workspaceAdminResponseDto = workspaceService.adminSearchUserWorkspace(userId);
 
 		return new ResponseEntity<>(workspaceAdminResponseDto, HttpStatus.OK);
-	};
+	}
 
 	/**
 	 * 본인 워크스페이스 조회 API

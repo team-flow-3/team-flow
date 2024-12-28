@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardListRepository extends JpaRepository<BoardList, Long> {
 	default BoardList findByIdOrElseThrow(Long BoardListId) {
-		return findById(BoardListId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+		return findById(BoardListId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_BOARDLIST));
 	}
 }

@@ -10,7 +10,7 @@ public class BoardListResponseDto {
 
 	private final Long id;//보드 id
 
-	private final String listTitle;//리스트 제목
+	private final String boardListTitle;//리스트 제목
 
 	private final Long array;//리스트 순서
 
@@ -18,10 +18,10 @@ public class BoardListResponseDto {
 
 	private final LocalDateTime modifiedAt;//수정일
 
-	public BoardListResponseDto(Long id, String listTitle, Long array, LocalDateTime createdAt,
+	public BoardListResponseDto(Long id, String boardListTitle, Long array, LocalDateTime createdAt,
 		LocalDateTime modifiedAt) {
 		this.id = id;
-		this.listTitle = listTitle;
+		this.boardListTitle = boardListTitle;
 		this.array = array;
 		this.createdAt = createdAt;
 		this.modifiedAt = modifiedAt;
@@ -30,7 +30,7 @@ public class BoardListResponseDto {
 	public static BoardListResponseDto toDto(BoardList boardList) {
 		return new BoardListResponseDto(
 			boardList.getId(),
-			boardList.getListTitle(),
+			boardList.getBoardListTitle(),
 			boardList.getArray(),
 			boardList.getCreatedAt(),
 			boardList.getModifiedAt()
