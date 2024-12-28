@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class BoardListController {
 
 	/**
 	 * 보드 리스트 생성 API
-	 * - 워크스페이스 관리자, 보드 권한 가진 유저 허용
+	 * - 워크스페이스 관리자, 보드 권한 보유 유저 허용
 	 */
 	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
 	@PostMapping
@@ -63,4 +64,16 @@ public class BoardListController {
 		return new ResponseEntity<>(boardListResponseDto, HttpStatus.OK);
 	}
 
+	/**
+	 * 보드 리스트 삭제 API
+	 * - 워크스페이스 관리자, 보드 권한 보유 유저 허용
+	 * - 삭제시 모든 카드와 데이터도 삭제
+	 */
+	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
+	@DeleteMapping("/{boardListId}")
+	public ResponseEntity<String> deleteBoardList(@PathVariable Long boardListId){
+		boardListService.deleteBoardList(boardListId);
+
+		return new ResponseEntity<>("보드 리스트가 삭제되었습니다.", HttpStatus.OK);
+	}
 }
