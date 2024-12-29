@@ -9,6 +9,8 @@ public class BoardResponseDto {
 
 	private final Long id;//보드 id
 
+//	private final Long workspaceId;//워크스페이스 id
+
 	private final String boardTitle;//보드 제목
 
 	private final String boardBackgroundColor;//보드 배경색
@@ -39,4 +41,5 @@ public class BoardResponseDto {
 			board.getModifiedAt()
 		);
 	}
+
 }

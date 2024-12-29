@@ -3,6 +3,7 @@ package com.currency.teamflow.domain.board.entity;
 import com.currency.teamflow.domain.boardlist.entity.BoardList;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import com.currency.teamflow.global.base.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,7 +38,7 @@ public class Board extends BaseEntity {
 
 	private String imageUrl;//보드 이미지
 
-	@OneToMany(mappedBy = "board")
+	@OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
 	private List<BoardList> boardLists = new ArrayList<>();
 
 	public Board() {
@@ -47,6 +48,10 @@ public class Board extends BaseEntity {
 		this.workspace = workspace;
 		this.boardTitle = boardTitle;
 		this.boardBackgroundColor = boardBackgroundColor;
+		this.imageUrl = imageUrl;
+	}
+
+	public void saveImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
 }

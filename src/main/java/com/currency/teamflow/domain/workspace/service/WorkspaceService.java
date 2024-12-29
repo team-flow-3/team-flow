@@ -12,6 +12,7 @@ import com.currency.teamflow.domain.workspace.dto.WorkspaceResponseDto;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import com.currency.teamflow.domain.workspace.repository.WorkspaceRepository;
 import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
+import com.currency.teamflow.global.alarm.AlarmService;
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
@@ -27,14 +28,16 @@ public class WorkspaceService {
 	private final WorkspaceRepository workspaceRepository;
 	private final UserRepository userRepository;
 	private final WorkspaceUserRepository workspaceUserRepository;
+	private final AlarmService alarmService;
 
 
 	public WorkspaceService(WorkspaceRepository workspaceRepository, UserRepository userRepository,
-		WorkspaceUserRepository workspaceUserRepository) {
+                            WorkspaceUserRepository workspaceUserRepository, AlarmService alarmService) {
 		this.workspaceRepository = workspaceRepository;
 		this.userRepository = userRepository;
 		this.workspaceUserRepository = workspaceUserRepository;
-	}
+        this.alarmService = alarmService;
+    }
 
 	/**
 	 * 워크스페이스 생성 API
@@ -59,7 +62,7 @@ public class WorkspaceService {
 		if(loginedUser.getId().equals(userId)){
 			throw new CustomException(ErrorCode.NOT_INVITE_YOURSELF);
 		}
-		
+
 		//워크스페이스 보드가 존재하는지 확인
 		Workspace workspace = workspaceRepository.findByIdOrElseThrow(workspaceId);
 		//유저 id랑 이메일 검증
@@ -73,6 +76,8 @@ public class WorkspaceService {
 		//유저 초대 & 저장
 		WorkspaceUser workspaceUserInvite = new WorkspaceUser(user, workspace, Role.READ_ONLY);
 		WorkspaceUser savedWorkspaceUserInvite = workspaceUserRepository.save(workspaceUserInvite);
+
+		alarmService.AlarmMessage(user.getNickName() + "님이 초대되었습니다."); // 멤버 초대 알람
 
 		return WorkspaceInviteResponseDto.toDto(savedWorkspaceUserInvite.getWorkspace(), user.getId());
 	}

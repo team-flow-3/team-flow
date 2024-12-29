@@ -9,6 +9,7 @@ import com.currency.teamflow.domain.card.dto.CardUpdateRequestDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
 import com.currency.teamflow.domain.card.repository.CardRepository;
+import com.currency.teamflow.global.alarm.AlarmService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +21,15 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final BoardListRepository boardListRepository;
-
+    private final AlarmService alarmService;
     private final CardManagerService cardManagerService;
 
     public CardService(CardRepository cardRepository,
-                       BoardListRepository boardListRepository,
+                       BoardListRepository boardListRepository, AlarmService alarmService,
                        CardManagerService cardManagerService) {
         this.cardRepository = cardRepository;
         this.cardManagerService = cardManagerService;
+        this.alarmService = alarmService;
         this.boardListRepository = boardListRepository;
     }
 
@@ -112,6 +114,8 @@ public class CardService {
                 );
 
         cardRepository.save(card);
+
+        alarmService.AlarmMessage("카드 제목 : " + card.getCardTitle() + "이 수정되었습니다.");
 
         return CardResponseDto.toDto(card);
     }
