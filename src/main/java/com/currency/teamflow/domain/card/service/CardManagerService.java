@@ -4,7 +4,10 @@ import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.domain.card.entity.CardManager;
 import com.currency.teamflow.domain.card.repository.CardManagerRepository;
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
+import com.currency.teamflow.global.error.errorcode.ErrorCode;
+import com.currency.teamflow.global.error.exception.CustomException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class CardManagerService {
      * @param userIds 유저 식별자 리스트
      * @return List<CardManager>
      */
-    public List<CardManager> createCardManager(Card card, List<Long> userIds) {
+    public List<CardManager> createCardManager(Card card, List<Long> userIds, Long workspaceId) {
 
         // 담당자 정보 가져오기
         List<User> users = userRepository.findAllById(userIds);
@@ -38,6 +41,13 @@ public class CardManagerService {
 
         // 카드매니저 등록하기
         for (User user : users) {
+            // 해당 워크스페이스에 속한 유저인지 확인
+            for(WorkspaceUser workspaceUser : user.getWorkspaceUsers()) {
+                if(!workspaceUser.getWorkspace().getId().equals(workspaceId)){
+                    throw new CustomException(ErrorCode.NOT_FOUND);
+                }
+            }
+
             CardManager cardManager = new CardManager(card, user);
             cardManagers.add(cardManager);
         }
@@ -56,12 +66,12 @@ public class CardManagerService {
      * @param userIds 유저 식별자 리스트
      * @return List<CardManager>
      */
-    public List<CardManager> updateCardManager(Card card, List<Long> userIds) {
+    public List<CardManager> updateCardManager(Card card, List<Long> userIds, Long workspaceId) {
 
         // 기존 담당자 삭제
         cardManagerRepository.deleteAllByCardCardId(card.getCardId());
 
         // 새로 담당자 등록
-        return createCardManager(card, userIds);
+        return createCardManager(card, userIds, workspaceId);
     }
 }
