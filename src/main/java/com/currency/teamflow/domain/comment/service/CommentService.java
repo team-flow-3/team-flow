@@ -8,6 +8,7 @@ import com.currency.teamflow.domain.comment.dto.CommentUpdateRequestDto;
 import com.currency.teamflow.domain.comment.entity.Comment;
 import com.currency.teamflow.domain.comment.repository.CommentsRepository;
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.global.alarm.AlarmService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class CommentService {
 
     private final CommentsRepository commentsRepository;
     private final CardRepository cardRepository;
+    private final AlarmService alarmService;
 
-    public CommentService(CommentsRepository commentsRepository, CardRepository cardRepository) {
+    public CommentService(CommentsRepository commentsRepository, CardRepository cardRepository, AlarmService alarmService) {
         this.commentsRepository = commentsRepository;
         this.cardRepository = cardRepository;
+        this.alarmService = alarmService;
     }
 
     /**
@@ -41,6 +44,8 @@ public class CommentService {
         Comment comment = new Comment(user, card, commentRequestDto.getComment());
 
         commentsRepository.save(comment);
+
+        alarmService.AlarmMessage(card.getCardTitle() + " 카드에 댓글이 작성되었습니다."); // 댓글 작성 알람
 
         return CommentResponseDto.toDto(comment);
     }

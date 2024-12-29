@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @Configuration
 public class AlarmService {
 
-    // yml정보 가져오기
+    // 정보 가져오기
     @Value("${slack.bot-token}")
     private String token;
     @Value("${slack.channel.monitor}")
@@ -27,6 +28,9 @@ public class AlarmService {
      * @param message
      */
     public void AlarmMessage(String message) {
+
+        // properties 파일은 Spring에서 기본적으로 ISO_8859_1로 인코딩 되기 때문에 charset으로 변경.
+        channel = new String(channel.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
         try {
             // Slack 메시지 블록 생성
