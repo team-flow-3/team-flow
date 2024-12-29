@@ -14,7 +14,9 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "card")
+@Table(name = "card", indexes = {
+		@Index(name = "idx_end_at", columnList = "end_At")
+})
 public class Card extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
