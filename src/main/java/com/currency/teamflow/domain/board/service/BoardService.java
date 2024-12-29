@@ -108,6 +108,7 @@ public class BoardService {
 	public void deleteBoard(Long boardId) {
 		//보드 정보 가져오기
 		Board board = boardRepository.findByIdOrElseThrow(boardId);
+		attachmentService.deleteAttachmentForBoard(board.getImageUrl());
 		boardRepository.delete(board);
 	}
 }
