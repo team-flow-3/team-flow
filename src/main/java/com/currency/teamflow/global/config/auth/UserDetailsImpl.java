@@ -40,7 +40,6 @@ public class UserDetailsImpl implements UserDetails {
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     Auth auth = this.user.getAuth();
-    log.info("사용자 권한: {}", auth.getAuthorities());
 
     return new ArrayList<>(auth.getAuthorities());
   }

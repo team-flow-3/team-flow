@@ -47,9 +47,9 @@ public class SecurityConfig {
    * @return 설정이 추가된 AuthenticationManager
    */
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+  AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
-    log.info("AuthenticationManager에 위임.");
+    // "AuthenticationManager 에 위임."
     return config.getAuthenticationManager();
   }
 

@@ -1,6 +1,5 @@
 package com.currency.teamflow.global.config.auth;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +8,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.io.IOException;
 
 /**
  * create on 2024. 12. 23. create by IntelliJ IDEA.
@@ -41,7 +39,7 @@ public class DelegatedAccessDeniedHandler implements AccessDeniedHandler {
    */
   @Override
   public void handle(HttpServletRequest request, HttpServletResponse response,
-      AccessDeniedException accessDeniedException) throws IOException, ServletException {
+      AccessDeniedException accessDeniedException) {
     resolver.resolveException(request, response, null, accessDeniedException);
   }
 }

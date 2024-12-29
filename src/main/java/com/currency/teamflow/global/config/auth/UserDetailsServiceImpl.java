@@ -40,7 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = this.userRepository.findUserByEmailOrElseThrow(username);
 
-    log.info("찾은 사용자: {}", username);
     return new UserDetailsImpl(user);
   }
 }
