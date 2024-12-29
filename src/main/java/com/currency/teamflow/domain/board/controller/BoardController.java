@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.board.controller;
 
+import com.currency.teamflow.domain.attachment.service.AttachmentService;
 import com.currency.teamflow.domain.board.dto.BoardRequestDto;
 import com.currency.teamflow.domain.board.dto.BoardResponseDto;
 import com.currency.teamflow.domain.board.dto.SearchBoardResponseDto;
