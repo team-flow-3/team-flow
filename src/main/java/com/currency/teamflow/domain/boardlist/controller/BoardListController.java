@@ -4,6 +4,7 @@ import com.currency.teamflow.domain.boardlist.dto.BoardListRequestDto;
 import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.boardlist.service.BoardListService;
 import com.currency.teamflow.domain.user.entity.User;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
 import com.currency.teamflow.global.enums.Role;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,11 +43,11 @@ public class BoardListController {
 		HttpServletRequest httpServletRequest) {
 
 		HttpSession httpSession = httpServletRequest.getSession(false);
-		User loginedUser = (User) httpSession.getAttribute("user");
+		WorkspaceUser workspaceUser = (WorkspaceUser) httpSession.getAttribute("workspaceUser");
 
 		BoardListResponseDto boardListResponseDto = boardListService.createBoardList(
 			boardListRequestDto,
-			loginedUser
+			workspaceUser
 		);
 
 		return new ResponseEntity<>(boardListResponseDto, HttpStatus.CREATED);
