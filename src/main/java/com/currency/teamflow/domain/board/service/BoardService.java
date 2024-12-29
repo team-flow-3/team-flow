@@ -99,4 +99,15 @@ public class BoardService {
 
 		return SearchBoardResponseDto.toDto(board, boardListResponseDto, cardResponseDto);
 	}
+
+	/**
+	 * 보드 단건 조회 서비스 메서드
+	 * - 워크스페이스 초대받은 모든 유저 허용
+	 * - 삭제시 모든 보드 리스트와 카드 데이터도 삭제
+	 */
+	public void deleteBoard(Long boardId) {
+		//보드 정보 가져오기
+		Board board = boardRepository.findByIdOrElseThrow(boardId);
+		boardRepository.delete(board);
+	}
 }
