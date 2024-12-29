@@ -98,6 +98,7 @@ public class WorkspaceController {
 	 * 본인 워크스페이스 조회 API
 	 * - 로그인한 유저 전용
 	 */
+	@CheckUserRole(requiredAuthorities = {Auth.USER}) // USER만 접근 가능
 	@GetMapping("/workspaces")
 	public ResponseEntity<List<UserWorkspaceListResponseDto>> userSearchWorkspace(
 		Authentication authentication){

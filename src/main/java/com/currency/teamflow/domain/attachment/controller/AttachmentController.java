@@ -2,6 +2,8 @@ package com.currency.teamflow.domain.attachment.controller;
 
 import com.currency.teamflow.domain.attachment.dto.AttachmentResponseDto;
 import com.currency.teamflow.domain.attachment.service.AttachmentService;
+import com.currency.teamflow.global.annotation.CheckMemberRole;
+import com.currency.teamflow.global.enums.Role;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class AttachmentController {
      * @return ResponseEntity<List<AttachmentResponseDto>>
      * @throws IOException
      */
+    @CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
     @PostMapping("/cards/{cardId}/attachments")
     public ResponseEntity<List<AttachmentResponseDto>> createAttachments(@PathVariable Long cardId,
                                                                        @Valid @RequestParam(required = false) List<MultipartFile> files) throws IOException {
@@ -60,6 +63,7 @@ public class AttachmentController {
      * @param attachmentId 첨부파일 식별자
      * @return ResponseEntity<Void>
      */
+    @CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
     @DeleteMapping("/attachments/{attachmentId}")
     public ResponseEntity<Void> deleteAttachment(@PathVariable Long attachmentId){
 

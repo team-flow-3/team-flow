@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +45,24 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto) {
+    public ResponseEntity<JwtAuthResponse> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
+                                                      HttpServletRequest request,
+                                                      HttpServletResponse response) {
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+
+        // 인증 정보가 있다면 로그아웃 처리.
+        if (authentication != null && authentication.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+            System.out.println("sadsadsada9-dsad9sa0sa09214234fsddfsf");
+        }
+
+        if(request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+        }
+
         JwtAuthResponse jwtAuthResponse = userService.loginUser(requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(jwtAuthResponse);
@@ -61,6 +80,10 @@ public class UserController {
     public ResponseEntity<String> logout(HttpServletRequest request,
                                                              HttpServletResponse response, Authentication authentication)
             throws UsernameNotFoundException {
+
+        if(request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+        }
 
         // 인증 정보가 있다면 로그아웃 처리.
         if (authentication != null && authentication.isAuthenticated()) {
