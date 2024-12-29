@@ -9,6 +9,8 @@ import com.currency.teamflow.domain.comment.entity.Comment;
 import com.currency.teamflow.domain.comment.repository.CommentsRepository;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.global.alarm.AlarmService;
+import com.currency.teamflow.global.error.errorcode.ErrorCode;
+import com.currency.teamflow.global.error.exception.CustomException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -73,10 +75,15 @@ public class CommentService {
      * @return CommentResponseDto
      */
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, CommentUpdateRequestDto commentUpdateRequestDto) {
+    public CommentResponseDto updateComment(Long commentId, CommentUpdateRequestDto commentUpdateRequestDto, Long userId) {
 
         // 댓글 정보 가져오기
         Comment comment = commentsRepository.findByIdOrElseThrow(commentId);
+
+        // 댓글 작성자 본인 확인
+        if(!comment.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.NOT_YOUR_COMMENT);
+        }
 
         // 댓글 수정
         comment.updateComment(commentUpdateRequestDto.getComment());
@@ -93,7 +100,15 @@ public class CommentService {
      * @param commentId 댓글 식별자
      */
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Long userId) {
+
+        // 댓글 정보 가져오기
+        Comment comment = commentsRepository.findByIdOrElseThrow(commentId);
+
+        // 댓글 작성자 본인 확인
+        if(!comment.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.NOT_YOUR_COMMENT);
+        }
 
         // 댓글 삭제
         commentsRepository.deleteById(commentId);
