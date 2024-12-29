@@ -41,4 +41,5 @@ public class BoardResponseDto {
 			board.getModifiedAt()
 		);
 	}
+
 }

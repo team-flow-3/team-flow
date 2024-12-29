@@ -1,12 +1,15 @@
 package com.currency.teamflow.domain.board.controller;
 
-import com.currency.teamflow.domain.attachment.service.AttachmentService;
+
 import com.currency.teamflow.domain.board.dto.BoardRequestDto;
 import com.currency.teamflow.domain.board.dto.BoardResponseDto;
 import com.currency.teamflow.domain.board.dto.SearchBoardResponseDto;
 import com.currency.teamflow.domain.board.service.BoardService;
+import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
 import com.currency.teamflow.global.enums.Role;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,10 +44,16 @@ public class BoardController {
 	 */
 	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
 	@PostMapping
-	public ResponseEntity<BoardResponseDto> createBoard(@Valid @ModelAttribute BoardRequestDto boardRequestDto,
-		@RequestPart(required = false) MultipartFile image) throws IOException {
+	public ResponseEntity<BoardResponseDto> createBoard(@Valid
+		@ModelAttribute BoardRequestDto boardRequestDto,
+		@RequestPart(required = false) MultipartFile image,
+		HttpServletRequest httpServletRequest) throws IOException {
+
+		HttpSession httpSession = httpServletRequest.getSession(false);
+		WorkspaceUser workspaceUser = (WorkspaceUser) httpSession.getAttribute("workspaceUser");
 
 		BoardResponseDto boardResponseDto = boardService.createBoard(
+			workspaceUser,
 			boardRequestDto,
 			image
 		);
@@ -76,5 +86,26 @@ public class BoardController {
 		boardService.deleteBoard(boardId);
 
 		return new ResponseEntity<>("보드가 삭제되었습니다.", HttpStatus.OK);
+	}
+
+	/**
+	 * 보드 수정 API
+	 * - 워크스페이스 관리자, 보드 권한 받은 유저 허용
+	 */
+	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
+	@PatchMapping("/{boardId}")
+	public ResponseEntity<BoardResponseDto> updateBoard(
+		@PathVariable Long boardId,
+		@ModelAttribute BoardRequestDto BoardRequestDto,
+		@RequestPart(required = false) MultipartFile image ,
+		HttpServletRequest httpServletRequest) throws IOException {
+
+		//워크스페이스 유저 세션에서 가져오기
+		HttpSession httpSession = httpServletRequest.getSession(false);
+		WorkspaceUser workspaceUser = (WorkspaceUser) httpSession.getAttribute("workspaceUser");
+
+		BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, workspaceUser, image);
+
+		return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
 	}
 }

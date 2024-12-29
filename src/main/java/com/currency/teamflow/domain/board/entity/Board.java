@@ -50,4 +50,8 @@ public class Board extends BaseEntity {
 		this.boardBackgroundColor = boardBackgroundColor;
 		this.imageUrl = imageUrl;
 	}
+
+	public void saveImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 }
