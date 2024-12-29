@@ -82,7 +82,7 @@ public class CommentService {
 
         // 댓글 작성자 본인 확인
         if(!comment.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorCode.NOT_MATCHED);
+            throw new CustomException(ErrorCode.NOT_YOUR_COMMENT);
         }
 
         // 댓글 수정
@@ -107,7 +107,7 @@ public class CommentService {
 
         // 댓글 작성자 본인 확인
         if(!comment.getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorCode.NOT_MATCHED);
+            throw new CustomException(ErrorCode.NOT_YOUR_COMMENT);
         }
 
         // 댓글 삭제

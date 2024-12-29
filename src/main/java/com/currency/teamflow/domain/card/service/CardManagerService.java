@@ -44,7 +44,7 @@ public class CardManagerService {
                     .anyMatch(wu -> wu.getWorkspace().getId().equals(workspaceId));
 
             if(!isUserInWorkspace) {
-                throw new CustomException(ErrorCode.valueOf("no match"));
+                throw new CustomException(ErrorCode.NO_IN_WORKSPACE);
             }
 
             CardManager cardManager = new CardManager(card, user);
