@@ -4,15 +4,19 @@ import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.repository.UserRepository;
-import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserDto;
 import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.global.config.PasswordEncoder;
-import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.enums.Status;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
+import com.currency.teamflow.global.util.AuthenticationScheme;
+import com.currency.teamflow.global.util.JwtProvider;
 import jakarta.validation.Valid;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +28,19 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final WorkspaceUserRepository workspaceUserRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       WorkspaceUserRepository workspaceUserRepository) {
+                       WorkspaceUserRepository workspaceUserRepository,
+                       AuthenticationManager authenticationManager,
+                       JwtProvider jwtProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.workspaceUserRepository = workspaceUserRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
     }
 
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
@@ -61,7 +71,7 @@ public class UserService {
      * @param requestDto
      * @return
      */
-    public User loginUser(UserLoginRequestDto requestDto) {
+    public JwtAuthResponse loginUser(UserLoginRequestDto requestDto) {
 
         User findUser = userRepository.findUserByEmailOrElseThrow(requestDto.getEmail());
 
@@ -75,7 +85,19 @@ public class UserService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_PASSWORD);
         }
 
-        return findUser;
+        // 사용자 인증 후 인증 객체를 저장
+        Authentication authentication = this.authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        requestDto.getEmail(),
+                        requestDto.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 토큰 생성
+        String accessToken = this.jwtProvider.generateToken(authentication);
+
+        return new JwtAuthResponse(AuthenticationScheme.BEARER.getName(), accessToken);
     }
 
     /**

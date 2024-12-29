@@ -10,15 +10,15 @@ import com.currency.teamflow.domain.workspace.dto.WorkspaceResponseDto;
 import com.currency.teamflow.domain.workspace.service.WorkspaceService;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
 import com.currency.teamflow.global.annotation.CheckUserRole;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import com.currency.teamflow.global.enums.Auth;
 import com.currency.teamflow.global.enums.Role;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,7 +45,7 @@ public class WorkspaceController {
 	 * - 관리자 전용
 	 */
 	@CheckUserRole(requiredAuthorities = {Auth.ADMIN})
-	@PostMapping("/workspaces")
+	@PostMapping("/admin/workspaces")
 	public ResponseEntity<WorkspaceResponseDto> createWorkspace(
 		@RequestBody WorkspaceRequestDto workspaceRequestDto) {
 
@@ -66,10 +66,11 @@ public class WorkspaceController {
 	public ResponseEntity<WorkspaceInviteResponseDto> inviteUserToWorkspace(
 		@PathVariable Long workspaceId, @PathVariable Long userId,
 		@RequestBody WorkspaceInviteRequestDto workspaceInviteRequestDto,
-		HttpServletRequest httpServletRequest){
+		Authentication authentication){
 
-		HttpSession httpSession = httpServletRequest.getSession(false);//session이 존재하지 않으면 기존 세션 반환
-		User loginedUser = (User) httpSession.getAttribute("user");
+		// 인증 정보 내의 유저 정보 가져오기
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User loginedUser = userDetails.getUser();
 
 		WorkspaceInviteResponseDto workspaceInviteResponseDto = workspaceService.inviteUserToWorkspace(
 			loginedUser,
@@ -99,9 +100,10 @@ public class WorkspaceController {
 	 */
 	@GetMapping("/workspaces")
 	public ResponseEntity<List<UserWorkspaceListResponseDto>> userSearchWorkspace(
-		HttpServletRequest httpServletRequest){
-		HttpSession httpSession = httpServletRequest.getSession(false);//session이 존재하지 않으면 기존 세션 반환
-		User loginedUser = (User) httpSession.getAttribute("user");
+		Authentication authentication){
+		// 인증 정보 내의 유저 정보 가져오기
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User loginedUser = userDetails.getUser();
 
 		List<UserWorkspaceListResponseDto> userWorkspaceListResponseDto = workspaceService.userSearchWorkspace(loginedUser);
 
@@ -117,10 +119,11 @@ public class WorkspaceController {
 	public ResponseEntity<WorkspaceResponseDto> updateWorkspace(
 		@PathVariable Long workspaceId,
 		@RequestBody WorkspaceRequestDto WorkspaceRequestDto,
-		HttpServletRequest httpServletRequest){
+		Authentication authentication){
 
-		HttpSession httpSession = httpServletRequest.getSession(false);
-		User loginedUser = (User) httpSession.getAttribute("user");
+		// 인증 정보 내의 유저 정보 가져오기
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User loginedUser = userDetails.getUser();
 
 		WorkspaceResponseDto workspaceResponseDto = workspaceService.updateWorkspace(loginedUser, workspaceId, WorkspaceRequestDto);
 
@@ -135,10 +138,11 @@ public class WorkspaceController {
 	@DeleteMapping("/workspaces/{workspaceId}")
 	public ResponseEntity<String> deleteWorkspace(
 		@PathVariable Long workspaceId,
-		HttpServletRequest httpServletRequest){
+		Authentication authentication){
 
-		HttpSession httpSession = httpServletRequest.getSession(false);
-		User loginedUser = (User) httpSession.getAttribute("user");
+		// 인증 정보 내의 유저 정보 가져오기
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		User loginedUser = userDetails.getUser();
 
 		workspaceService.deleteWorkspace(workspaceId, loginedUser);
 

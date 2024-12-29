@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 로그인 인터셉터
-        registry.addInterceptor(loginInterceptor);
+        // registry.addInterceptor(loginInterceptor);
 
         // 유저 권한 인터셉터
         registry.addInterceptor(userRoleInterceptor)

@@ -4,7 +4,6 @@ import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.global.enums.Status;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,11 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findUserByEmailAndStatus(String email, Status status);
 
-    Optional<User> findUserByEmail(String email);
+    Optional<User> findByEmailAndStatus(String email, Status status);
 
     // 아이디가 있는지 검사
     default User findUserByEmailOrElseThrow (String email) {
-        return findUserByEmail(email).orElseThrow(
+        return findByEmailAndStatus(email, Status.NORMAL).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND)
         );
     }
