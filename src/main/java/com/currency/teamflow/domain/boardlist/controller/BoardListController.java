@@ -3,7 +3,6 @@ package com.currency.teamflow.domain.boardlist.controller;
 import com.currency.teamflow.domain.boardlist.dto.BoardListRequestDto;
 import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.boardlist.service.BoardListService;
-import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
 import com.currency.teamflow.global.enums.Role;
@@ -39,15 +38,16 @@ public class BoardListController {
 	@CheckMemberRole(requiredRoles = {Role.WORKSPACE_ADMIN, Role.BOARD_USER})
 	@PostMapping
 	public ResponseEntity<BoardListResponseDto> createBoardList(
-		@Valid @RequestBody BoardListRequestDto boardListRequestDto,
-		HttpServletRequest httpServletRequest) {
+			@Valid @RequestBody BoardListRequestDto boardListRequestDto,
+			HttpServletRequest httpServletRequest) {
 
+		// 인증 정보 내의 유저 정보 가져오기
 		HttpSession httpSession = httpServletRequest.getSession(false);
 		WorkspaceUser workspaceUser = (WorkspaceUser) httpSession.getAttribute("workspaceUser");
 
 		BoardListResponseDto boardListResponseDto = boardListService.createBoardList(
-			boardListRequestDto,
-			workspaceUser
+				boardListRequestDto,
+				workspaceUser
 		);
 
 		return new ResponseEntity<>(boardListResponseDto, HttpStatus.CREATED);
