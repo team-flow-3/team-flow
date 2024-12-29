@@ -141,4 +141,51 @@ public class AttachmentService {
 
         attachmentRepository.deleteById(attachmentId);
     }
+
+    /**
+     * 첨부파일 단건 생성 서비스 메서드 (보드 사용)
+     *
+     * @param file 첨부파일
+     * @return String
+     * @throws IOException
+     */
+    public String createAttachmentForBoard(MultipartFile file) throws IOException {
+
+        // 파일 s3에 업로드하고 DB에 정보 저장
+        String originalFilename = file.getOriginalFilename();
+
+        if(originalFilename == null) {
+            return null;
+        }
+
+        // 고유 파일 이름 생성
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        // S3에 파일 업로드 요청 생성
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucket)
+            .key(fileName)
+            .contentType(file.getContentType())
+            .build();
+
+        // S3에 파일 업로드
+        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+        // S3 서버 객체 URL 가져오기
+        return getPublicUrl(fileName);
+    }
+
+    /**
+     * 첨부파일 삭제 서비스 메서드 (보드 사용)
+     *
+     * @param fileUrl 첨부파일 url
+     */
+    public void deleteAttachmentForBoard(String fileUrl) {
+
+        String[] url = fileUrl.split("com/");
+
+        // S3에 파일 업로드
+        s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucket).key(url[1]).build());
+
+    }
 }

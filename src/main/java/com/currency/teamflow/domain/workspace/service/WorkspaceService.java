@@ -59,7 +59,7 @@ public class WorkspaceService {
 		if(loginedUser.getId().equals(userId)){
 			throw new CustomException(ErrorCode.NOT_INVITE_YOURSELF);
 		}
-		
+
 		//워크스페이스 보드가 존재하는지 확인
 		Workspace workspace = workspaceRepository.findByIdOrElseThrow(workspaceId);
 		//유저 id랑 이메일 검증
