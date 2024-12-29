@@ -29,7 +29,7 @@ public class Card extends BaseEntity {
 	private LocalDate endAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "list_id")
+	@JoinColumn(name = "board_list_id")
 	private BoardList boardList;
 
 	@OneToMany(mappedBy = "card")

@@ -1,8 +1,8 @@
 package com.currency.teamflow.domain.workspace.entity;
 
-
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.base.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Workspace extends BaseEntity {
 	@NotNull
 	private String workspaceExplanation;//워크스페이스 설명
 
-	@OneToMany(mappedBy = "workspace")
+	@OneToMany(mappedBy = "workspace", cascade = CascadeType.REMOVE)
 	private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
 
 	public Workspace() {
@@ -40,5 +40,9 @@ public class Workspace extends BaseEntity {
 		this.workspaceExplanation = workspaceExplanation;
 	}
 
-
+	//워크스페이스 정보 수정
+	public void updateWorkspace(String workspaceName, String workspaceExplanation) {
+		this.workspaceName = workspaceName;
+		this.workspaceExplanation = workspaceExplanation;
+	}
 }
