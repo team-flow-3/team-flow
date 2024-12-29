@@ -50,11 +50,6 @@ jobs:
             fi
 
             sudo docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKER_IMAGE_TAG_NAME }}:latest
-
-#           AWS RDS 환경 변수 설정
-            export DB_HOST=${{ secrets.RDS_HOST }}
-            export DB_USER=${{ secrets.RDS_USER }}
-            export DB_PASSWORD=${{ secrets.RDS_PASSWORD }}
             
             sudo docker run -d -p 8080:8080 \
                 -e DB_USERNAME=${{secrets.DB_USERNAME}} \
