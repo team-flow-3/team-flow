@@ -54,6 +54,14 @@ public class WorkspaceUserController {
         return ResponseEntity.ok("워크스페이스 관리자 삭제 완료");
     }
 
+    /**
+     * 워크스페이스 선택
+     *
+     * @param workspaceId 워크스페이스 식별자
+     * @param servletRequest
+     * @param authentication
+     * @return 선택 완료 메세지
+     */
     @PostMapping("/workspaces/{workspaceId}/choice")
     public ResponseEntity<String> selectWorkspace(
             @PathVariable Long workspaceId,
