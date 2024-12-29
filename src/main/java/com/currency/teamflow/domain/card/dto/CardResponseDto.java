@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class CardResponseDto {
@@ -18,7 +19,7 @@ public class CardResponseDto {
 
     private final LocalDate endAt;
 
-    private final List<String> userNicknameList;
+    private final List<Map<Long, String>> userList;
 
     private final LocalDateTime createdAt;
 
@@ -28,21 +29,23 @@ public class CardResponseDto {
                            String cardTitle,
                            String cardExplanation,
                            LocalDate endAt,
-                           List<String> userNicknameList,
+                           List<Map<Long, String>> userList,
                            LocalDateTime createdAt,
                            LocalDateTime modifiedAt) {
         this.cardId = cardId;
         this.cardTitle = cardTitle;
         this.cardExplanation = cardExplanation;
         this.endAt = endAt;
-        this.userNicknameList = userNicknameList;
+        this.userList = userList;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
     public static CardResponseDto toDto(Card card) {
-        List<String> userNicknameList = card.getCardManagers()
-                .stream().map(user -> user.getUser().getNickName()).toList();
+        List<Map<Long, String>> userNicknameList = card.getCardManagers()
+                .stream()
+                .map(cardManager -> Map.of(cardManager.getUser().getId(), cardManager.getUser().getNickName()))
+                .toList();
 
         return new CardResponseDto(
                 card.getCardId(),
