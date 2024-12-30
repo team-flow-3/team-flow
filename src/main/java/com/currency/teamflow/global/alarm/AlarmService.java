@@ -30,7 +30,7 @@ public class AlarmService {
     public void AlarmMessage(String message) {
 
         // properties 파일은 Spring에서 기본적으로 ISO_8859_1로 인코딩 되기 때문에 charset으로 변경.
-        channel = new String(channel.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+//        channel = new String(channel.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
         try {
             // Slack 메시지 블록 생성
