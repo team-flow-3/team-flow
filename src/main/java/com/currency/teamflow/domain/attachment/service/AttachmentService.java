@@ -94,14 +94,26 @@ public class AttachmentService {
         if(originalFilename.endsWith(".png")) {
             extension = "png";
         }
+        else if(originalFilename.endsWith(".PNG")){
+            extension = "PNG";
+        }
         else if(originalFilename.endsWith(".jpg")) {
             extension = "jpg";
+        }
+        else if(originalFilename.endsWith(".JPG")) {
+            extension = "JPG";
         }
         else if(originalFilename.endsWith(".csv")) {
             extension = "csv";
         }
+        else if(originalFilename.endsWith(".CSV")) {
+            extension = "CSV";
+        }
         else if(originalFilename.endsWith(".pdf")) {
             extension = "pdf";
+        }
+        else if(originalFilename.endsWith(".PDF")) {
+            extension = "PDF";
         }
         else {
             throw new IllegalArgumentException("Unsupported file type: " + originalFilename);

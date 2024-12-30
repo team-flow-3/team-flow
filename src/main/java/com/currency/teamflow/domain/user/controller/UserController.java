@@ -2,13 +2,18 @@ package com.currency.teamflow.domain.user.controller;
 
 import com.currency.teamflow.domain.user.dto.*;
 import com.currency.teamflow.domain.user.entity.User;
-import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.user.service.UserService;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -37,35 +42,73 @@ public class UserController {
     /**
      * 로그인 기능
      * @param requestDto
-     * @param servletRequest
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
-                                                      HttpServletRequest servletRequest) {
-        User user = userService.loginUser(requestDto);
-        HttpSession session = servletRequest.getSession();
-        session.setAttribute("user", user);
+    public ResponseEntity<JwtAuthResponse> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
+                                                      HttpServletRequest request,
+                                                      HttpServletResponse response) {
 
-        UserResponseDto loginResponseDto
-                = new UserResponseDto(user.getId(), user.getEmail(), "로그인되었습니다.");
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
+        // 인증 정보가 있다면 로그아웃 처리.
+        if (authentication != null && authentication.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+            System.out.println("sadsadsada9-dsad9sa0sa09214234fsddfsf");
+        }
+
+        if(request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+        }
+
+        JwtAuthResponse jwtAuthResponse = userService.loginUser(requestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(jwtAuthResponse);
+    }
+
+    /**
+     * 로그아웃 기능
+     * @param request
+     * @param response
+     * @param authentication
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request,
+                                                             HttpServletResponse response, Authentication authentication)
+            throws UsernameNotFoundException {
+
+        if(request.getSession(false) != null) {
+            request.getSession(false).invalidate();
+        }
+
+        // 인증 정보가 있다면 로그아웃 처리.
+        if (authentication != null && authentication.isAuthenticated()) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+            return ResponseEntity.ok("로그아웃 성공.");
+        }
+
+        // 인증 정보가 없다면 인증되지 않았기 때문에 로그인 필요.
+        throw new UsernameNotFoundException("로그인이 먼저 필요합니다.");
     }
 
 
     /**
      * 회원 탈퇴
      * @param requestDto
-     * @param servletRequest
      * @return
      */
     @DeleteMapping
     public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
-                                                       HttpServletRequest servletRequest) {
-        //세션이 존재하지 않으면 null로 반환
-        HttpSession session = servletRequest.getSession(false);
-        User loginUser = (User) session.getAttribute("user");
+                                                       Authentication authentication) {
+
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
 
         userService.deleteUser(loginUser.getId(), requestDto);
 
@@ -96,11 +139,11 @@ public class UserController {
     public ResponseEntity<String> updateWorkspaceMemberRole(
             @PathVariable Long workspaceId,
             @Valid @RequestBody RoleUpdateDto roleUpdateDto,
-            HttpServletRequest servletRequest) {
+            Authentication authentication) {
 
-        //세션이 존재하지 않으면 null로 반환
-        HttpSession session = servletRequest.getSession(false);
-        User loginUser = (User) session.getAttribute("user");
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
 
         userService.updateWorkspaceMemberRole(loginUser.getId(), workspaceId, roleUpdateDto);
 

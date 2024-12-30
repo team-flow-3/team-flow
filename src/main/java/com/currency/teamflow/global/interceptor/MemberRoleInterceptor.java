@@ -2,8 +2,8 @@ package com.currency.teamflow.global.interceptor;
 
 import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
-import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.global.annotation.CheckMemberRole;
+import com.currency.teamflow.global.config.auth.UserDetailsImpl;
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
@@ -11,13 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -38,14 +38,25 @@ public class MemberRoleInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        // 인증 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // 인증 정보가 없으면 예러
+        if (authentication == null) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 인증 정보 내의 유저 정보 가져오기
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User loginUser = userDetails.getUser();
+
         // 세션 확인
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null || session.getAttribute("workspaceUser") == null) {
+        if (session == null || session.getAttribute("workspaceUser") == null) {
             throw new CustomException(ErrorCode.UNAUTHORIZED); // 세션에 필요한 정보가 없으면 예외 발생
         }
 
         // 세션에서 로그인 사용자와 선택된 워크스페이스 정보 가져오기
-        User loginUser = (User) session.getAttribute("user");
         WorkspaceUser workspaceUser = (WorkspaceUser) session.getAttribute("workspaceUser");
 
         // 로그인 사용자가 선택한 워크스페이스에 속해 있는지 검증
