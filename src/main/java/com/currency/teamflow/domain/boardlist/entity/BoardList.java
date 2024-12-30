@@ -1,6 +1,7 @@
 package com.currency.teamflow.domain.boardlist.entity;
 
 import com.currency.teamflow.domain.board.entity.Board;
+import com.currency.teamflow.domain.boardlist.dto.BoardListResponseDto;
 import com.currency.teamflow.domain.card.entity.Card;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.*;
@@ -22,10 +23,8 @@ public class BoardList extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;//보드 id(외래키)
 
-    @NotNull
     private String boardListTitle;//리스트 제목
 
-    @NotNull
     private Long array;//리스트 순서
 
     @OneToMany(mappedBy = "boardList", cascade = CascadeType.REMOVE)
@@ -45,6 +44,19 @@ public class BoardList extends BaseEntity {
     }
 
     public void addArrayNumber(long array) {
+        this.array = array;
+    }
+
+    /**
+     * 보드 리스트 수정
+     * - 원하는 위치에 boardList 정보 삽입
+     *
+     */
+    public void updateBoardListTitle(String boardListTitle) {
+        this.boardListTitle = boardListTitle;
+    }
+
+    public void updateArray(Long array) {
         this.array = array;
     }
 }

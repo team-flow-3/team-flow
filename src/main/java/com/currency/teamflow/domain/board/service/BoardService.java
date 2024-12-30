@@ -127,7 +127,7 @@ public class BoardService {
 	public BoardResponseDto updateBoard(Long boardId, WorkspaceUser workspaceUser, MultipartFile image)
 		throws IOException {
 		//보드 정보 가져오기
-		Board board = boardRepository.findBoardIdByWorkspaceId(workspaceUser.getWorkspace().getId(), boardId)
+		Board board = boardRepository.findBoardIdByWorkspaceIdAndBoardId(workspaceUser.getWorkspace().getId(), boardId)
 			.orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_BOARD));
 		log.info("board : {}" , board.getId());
 
