@@ -46,7 +46,7 @@ public class WorkspaceUserController {
      * @return 삭제 완료 메시지
      */
     @CheckUserRole(requiredAuthorities = {Auth.ADMIN}) // ADMIN만 접근 가능
-    @DeleteMapping("/admin/Users/{userId}/revoke")
+    @DeleteMapping("/admin/users/{userId}/revoke")
     public ResponseEntity<String> deleteWorkspaceAdmin(@PathVariable Long userId) {
 
         workspaceUserService.deleteWorkspaceAdmin(userId);
