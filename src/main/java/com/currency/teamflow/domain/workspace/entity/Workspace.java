@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.workspace.entity;
 
+import com.currency.teamflow.domain.board.entity.Board;
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.global.base.BaseEntity;
 import jakarta.persistence.CascadeType;
@@ -31,6 +32,9 @@ public class Workspace extends BaseEntity {
 
 	@OneToMany(mappedBy = "workspace", cascade = CascadeType.REMOVE)
 	private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+
+	@OneToMany(mappedBy = "workspace", cascade = CascadeType.REMOVE)
+	private List<Board> boards = new ArrayList<>();
 
 	public Workspace() {
 	}
