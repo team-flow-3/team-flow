@@ -13,7 +13,6 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호 형식이 올바르지 않습니다."),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "이메일 형식이 올바르지 않습니다."),
     NOT_INVITE_YOURSELF(HttpStatus.BAD_REQUEST, "자기 자신은 워크스페이스에 초대할 수 없습니다"),
-    NO_IN_WORKSPACE(HttpStatus.BAD_REQUEST, "워크스페이스 멤버가 아닙니다."),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -22,7 +21,6 @@ public enum ErrorCode {
     // 403 Forbidden
     FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN,"접근이 거부됐습니다."),
     FORBIDDEN_PERMISSION(HttpStatus.FORBIDDEN, "사용자 권한이 없습니다."),
-    FORBIDDEN_REGISTER(HttpStatus.FORBIDDEN,"이메일이 사용중입니다."),
     FORBIDDEN_LOGIN(HttpStatus.FORBIDDEN,"이미 탈퇴한 유저입니다."),
     NOT_YOUR_COMMENT(HttpStatus.FORBIDDEN,"해당 댓글의 작성자가 아닙니다."),
 
@@ -34,7 +32,7 @@ public enum ErrorCode {
     NOT_FOUND_BOARDLIST(HttpStatus.NOT_FOUND, "보드 리스트를 찾을 수 없습니다."),
 
     // 409 CONFLICT
-    DUPLICATE_USER_ID(HttpStatus.CONFLICT, "중복된 아이디입니다."),
+    DUPLICATE_VALUE(HttpStatus.CONFLICT, "중복된 정보입니다."),
     USER_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 탈퇴한 사용자 아이디입니다."),
     USER_ALREADY_INVITED(HttpStatus.CONFLICT, "이미 해당 워크스페이스에 초대된 사용자입니다.")
 
