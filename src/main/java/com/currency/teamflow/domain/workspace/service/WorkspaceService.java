@@ -40,7 +40,7 @@ public class WorkspaceService {
     }
 
 	/**
-	 * 워크스페이스 생성 API
+	 * 워크스페이스 생성 서비스 메서드
 	 * - 관리자 전용
 	 */
 	@Transactional
@@ -53,7 +53,7 @@ public class WorkspaceService {
 	}
 
 	/**
-	 * 워크스페이스 멤버 초대 API
+	 * 워크스페이스 멤버 초대 서비스 메서드
 	 * - 워크스페이스 관리자 전용
 	 */
 	@Transactional
@@ -83,7 +83,7 @@ public class WorkspaceService {
 	}
 
 	/**
-	 * 유저 워크스페이스 조회 API
+	 * 유저 워크스페이스 조회 서비스 메서드
 	 * - 관리자 전용
 	 */
 	public WorkspaceAdminResponseDto adminSearchUserWorkspace(Long userId) {
@@ -96,7 +96,7 @@ public class WorkspaceService {
 	}
 
 	/**
-	 * 본인 워크스페이스 조회 API
+	 * 본인 워크스페이스 조회 서비스 메서드
 	 * - 로그인한 유저 전용
 	 */
 	public List<UserWorkspaceListResponseDto> userSearchWorkspace(User loginedUser) {
@@ -106,7 +106,7 @@ public class WorkspaceService {
 	}
 
 	/**
-	 * 워크스페이스 수정 API
+	 * 워크스페이스 수정 서비스 메서드
 	 * - 관리자 전용
 	 */
 	@Transactional
@@ -135,7 +135,7 @@ public class WorkspaceService {
 	}
 
 	/**
-	 * 워크스페이스 삭제 API
+	 * 워크스페이스 삭제 서비스 메서드
 	 * - 워크스페이스 관리자 전용
 	 */
 	@Transactional

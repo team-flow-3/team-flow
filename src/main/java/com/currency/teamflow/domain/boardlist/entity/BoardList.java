@@ -27,7 +27,7 @@ public class BoardList extends BaseEntity {
 
     private Long array;//리스트 순서
 
-    @OneToMany(mappedBy = "boardList", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "boardList", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Card> cards = new ArrayList<>();
 
     public BoardList() {

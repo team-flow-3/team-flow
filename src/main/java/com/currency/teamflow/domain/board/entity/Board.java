@@ -38,7 +38,7 @@ public class Board extends BaseEntity {
 
 	private String imageUrl;//보드 이미지
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.REMOVE)
 	private List<BoardList> boardLists = new ArrayList<>();
 
 	public Board() {
