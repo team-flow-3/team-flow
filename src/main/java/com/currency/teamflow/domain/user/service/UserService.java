@@ -49,12 +49,12 @@ public class UserService {
                 = userRepository.findUserByEmailAndStatus(requestDto.getEmail(), Status.DELETE);
 
         if (!users.isEmpty()) {
-            throw new CustomException(ErrorCode.FORBIDDEN_REGISTER);
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
         }
 
         // 이메일 중복 검사
         if(userRepository.existsUserByEmail(requestDto.getEmail())){
-            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
         }
 
         // 패스워드 인코딩
@@ -157,7 +157,7 @@ public class UserService {
 
         //스스로 본인 역할 변경 불가
         if(loginUserId.equals(roleUpdateDto.getMemberId())) {
-            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
         }
 
         // 대상 멤버 조회
@@ -166,7 +166,7 @@ public class UserService {
 
         // 변경하려는 역할이 허용된 역할인지 확인
         if (!isAllowedRole(roleUpdateDto.getNewRole())) {
-            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
         }
 
         // 대상 멤버가 WORKSPACE 관리자라면 변경 불가
