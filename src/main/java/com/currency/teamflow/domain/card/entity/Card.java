@@ -34,7 +34,7 @@ public class Card extends BaseEntity {
 	@JoinColumn(name = "board_list_id")
 	private BoardList boardList;
 
-	@OneToMany(mappedBy = "card")
+	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Attachment> attachments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "card", orphanRemoval = true, cascade = CascadeType.ALL)
