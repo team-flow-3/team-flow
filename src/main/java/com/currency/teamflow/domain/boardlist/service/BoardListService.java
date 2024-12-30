@@ -109,8 +109,10 @@ public class BoardListService {
 
 		//array가 null값이 들어올 경우
 		if(updateBoardListArray == null){
-			updateBoardListArray = boardList.getArray();
+			updateBoardListArray = changeBordListArray;
 		}
+		//람다에서 사용할 수 있도록 선언
+		final Long finalUpdateBoardListArray = updateBoardListArray;
 
 		//요청받은 boardListTitle 가져오기
 		String boardListTitle = boardListUpdateRequestDto.getBoardListTitle();
@@ -126,15 +128,14 @@ public class BoardListService {
 		List<BoardList> allBoardListArray = boardListRepository.findAllByBoardOrderByArrayAsc(boardList.getBoard().getId());
 		log.info("allBoardListArray size : " , allBoardListArray);
 
-		// 순서 변경
+		//순서 변경 로직
 		//만약 순서를 변경하고싶은 보드 리스트 array가 이동할 array 보다 작을 경우
 		//ex) 3 -> 5
 		if (changeBordListArray < updateBoardListArray) {
 			//해당 보드리스트 뒤에있는 보드 리스트들 array 순서가 앞으로 당겨져야함
 			//ex) 4, 5 ->  3, 4로 변경
-			Long finalUpdateBoardListArray = updateBoardListArray;
 			allBoardListArray.stream()
-				.filter(list -> list.getArray() > changeBordListArray && list.getArray() <= finalUpdateBoardListArray.longValue())
+				.filter(list -> list.getArray() > changeBordListArray && list.getArray() <= finalUpdateBoardListArray)
 				.forEach(list -> list.updateArray(list.getArray() -1));
 		}
 
@@ -143,7 +144,6 @@ public class BoardListService {
 		if (changeBordListArray > updateBoardListArray) {
 			//해당 보드리스트 앞에있는 보드 리스트들 array 순서가 순서가 뒤로 밀려야함
 			//ex) 3, 4 -> 4, 5로 변경
-			Long finalUpdateBoardListArray = updateBoardListArray;
 			allBoardListArray.stream()
 				.filter(list -> list.getArray() >= finalUpdateBoardListArray.longValue() && list.getArray() < changeBordListArray)
 				.forEach(list -> list.updateArray(list.getArray() + 1));
