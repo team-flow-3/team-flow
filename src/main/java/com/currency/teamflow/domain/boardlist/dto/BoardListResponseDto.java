@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class BoardListResponseDto {
 
-	private final Long id;//보드 id
+	private final Long id;//보드 리스트 id
 
 	private final String boardListTitle;//리스트 제목
 
@@ -35,5 +35,16 @@ public class BoardListResponseDto {
 			boardList.getCreatedAt(),
 			boardList.getModifiedAt()
 		);
+	}
+
+	public void setArray(long l) {
+	}
+
+	public BoardListResponseDto(BoardList boardList) {
+		this.id = boardList.getId();
+		this.boardListTitle = boardList.getBoardListTitle();
+		this.array = boardList.getArray();
+		this.createdAt = boardList.getCreatedAt();
+		this.modifiedAt = boardList.getModifiedAt();
 	}
 }

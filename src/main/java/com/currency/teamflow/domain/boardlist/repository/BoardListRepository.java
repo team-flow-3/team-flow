@@ -20,4 +20,11 @@ public interface BoardListRepository extends JpaRepository<BoardList, Long> {
 		+ "FROM BoardList bl "
 		+ "WHERE bl.board.id = :boardId")
 	List<BoardListResponseDto> findAllBoardListByBoardId(Long boardId);
+
+	@Query("SELECT bl " +
+		"FROM BoardList bl " +
+		"WHERE bl.board.id = :boardId " +
+		"ORDER BY bl.array ASC")
+	List<BoardList> findAllByBoardOrderByArrayAsc(Long boardId);
+
 }
