@@ -1,17 +1,16 @@
 package com.currency.teamflow.domain.workspaceuser.service;
 
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
-import com.currency.teamflow.domain.user.repository.UserRepository;
-import com.currency.teamflow.domain.workspace.repository.WorkspaceRepository;
 import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserDto;
 import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserResponseDto;
 import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserRepository;
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class WorkspaceUserService {
@@ -36,14 +35,9 @@ public class WorkspaceUserService {
     public WorkspaceUserResponseDto assignWorkspaceAdmin(Long workspaceId, Long userId) {
 
         WorkspaceUserDto dto = workspaceUserRepository.findByWorkspaceAndUserByIdsElseThrow(workspaceId, userId);
-        WorkspaceUser findworkspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserById(workspaceId, userId);
-
-        if(findworkspaceUser.getRole() == Role.WORKSPACE_ADMIN) {
-            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
-        }
 
         Optional<WorkspaceUser> workspaceUserOptional =
-            workspaceUserRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
+                workspaceUserRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
 
         // 이미 존재하는 경우 예외 처리
         if(workspaceUserOptional.isPresent() && workspaceUserOptional.get().getRole() == Role.WORKSPACE_ADMIN){
