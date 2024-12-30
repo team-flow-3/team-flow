@@ -9,6 +9,7 @@ import com.currency.teamflow.domain.workspaceuser.repository.WorkspaceUserReposi
 import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,17 @@ public class WorkspaceUserService {
         if(findworkspaceUser.getRole() == Role.WORKSPACE_ADMIN) {
             throw new CustomException(ErrorCode.DUPLICATE_VALUE);
         }
+
+        Optional<WorkspaceUser> workspaceUserOptional =
+            workspaceUserRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
+
+        // 이미 존재하는 경우 예외 처리
+        if(workspaceUserOptional.isPresent() && workspaceUserOptional.get().getRole() == Role.WORKSPACE_ADMIN){
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
+        }
+
+        // 이미 존재하지만 권한이 다른 경우 권한 변경
+        workspaceUserOptional.ifPresent(workspaceUser -> workspaceUser.setRole(Role.WORKSPACE_ADMIN));
 
         // WorkspaceUser 생성
         WorkspaceUser workspaceUser = new WorkspaceUser(dto.getUser(), dto.getWorkspace(), Role.WORKSPACE_ADMIN);
