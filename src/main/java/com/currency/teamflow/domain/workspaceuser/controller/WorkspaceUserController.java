@@ -42,14 +42,14 @@ public class WorkspaceUserController {
 
     /**
      * ADMIN이 특정 워크스페이스 관리자를 삭제
-     * @param workspaceUserId 워크스페이스 사용자 ID
+     * @param userId 워크스페이스 사용자 ID
      * @return 삭제 완료 메시지
      */
     @CheckUserRole(requiredAuthorities = {Auth.ADMIN}) // ADMIN만 접근 가능
-    @DeleteMapping("/admin/workspaceUser/{workspaceUserId}")
-    public ResponseEntity<String> deleteWorkspaceAdmin(@PathVariable Long workspaceUserId) {
+    @DeleteMapping("/admin/Users/{userId}/revoke")
+    public ResponseEntity<String> deleteWorkspaceAdmin(@PathVariable Long userId) {
 
-        workspaceUserService.deleteWorkspaceAdmin(workspaceUserId);
+        workspaceUserService.deleteWorkspaceAdmin(userId);
 
         return ResponseEntity.ok("워크스페이스 관리자 삭제 완료");
     }

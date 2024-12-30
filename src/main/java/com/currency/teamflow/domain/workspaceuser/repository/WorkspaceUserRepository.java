@@ -2,6 +2,7 @@ package com.currency.teamflow.domain.workspaceuser.repository;
 
 import com.currency.teamflow.domain.user.entity.WorkspaceUser;
 import com.currency.teamflow.domain.workspaceuser.dto.WorkspaceUserDto;
+import com.currency.teamflow.global.enums.Role;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
 import com.currency.teamflow.global.error.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,9 +38,14 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
 
     Optional<WorkspaceUser> findByWorkspaceIdAndUserId(Long workspaceId, Long userId);
 
+    Optional<WorkspaceUser> findByUserIdAndRole(Long userId, Role role);
     @Query("SELECT wu "
         + "FROM WorkspaceUser wu "
         + "WHERE wu.user.id = :userId AND wu.workspace.id = :workspaceId")
     Optional<WorkspaceUser> findByWorkspaceIdAndUserByIdOrElseThrow(Long userId, Long workspaceId);
 
+    default WorkspaceUser findByUserIdAndRoleOrElseThrow(Long userId, Role role) {
+        return findByUserIdAndRole(userId, role).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND));
+    }
 }

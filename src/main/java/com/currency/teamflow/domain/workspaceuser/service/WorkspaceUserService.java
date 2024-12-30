@@ -50,13 +50,13 @@ public class WorkspaceUserService {
 
     /**
      * ADMIN이 특정 워크스페이스 관리자를 삭제
-     * @param workspaceUserId 워크스페이스 사용자 ID
+     * @param userId 워크스페이스 사용자 ID
      * @return 삭제 완료 메시지
      */
     @Transactional
-    public void deleteWorkspaceAdmin(Long workspaceUserId) {
+    public void deleteWorkspaceAdmin(Long userId) {
         // WorkspaceUser 조회
-        WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceOrElseThrow(workspaceUserId);
+        WorkspaceUser workspaceUser = workspaceUserRepository.findByUserIdAndRoleOrElseThrow(userId, Role.WORKSPACE_ADMIN);
 
         // 삭제 처리
         workspaceUserRepository.delete(workspaceUser);
