@@ -36,6 +36,11 @@ public class WorkspaceUserService {
     public WorkspaceUserResponseDto assignWorkspaceAdmin(Long workspaceId, Long userId) {
 
         WorkspaceUserDto dto = workspaceUserRepository.findByWorkspaceAndUserByIdsElseThrow(workspaceId, userId);
+        WorkspaceUser findworkspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserById(workspaceId, userId);
+
+        if(findworkspaceUser.getRole() == Role.WORKSPACE_ADMIN) {
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
+        }
 
         Optional<WorkspaceUser> workspaceUserOptional =
             workspaceUserRepository.findByUserIdAndWorkspaceId(userId, workspaceId);
