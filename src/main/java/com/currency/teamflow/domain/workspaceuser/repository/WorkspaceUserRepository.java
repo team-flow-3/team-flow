@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -51,4 +52,6 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Lo
     }
 
     Optional<WorkspaceUser> findByUserIdAndWorkspaceId(Long userId, Long workspaceId);
+
+    List<WorkspaceUser> findAllByUserIdInAndWorkspaceId(List<Long> userIds, Long workspaceId);
 }

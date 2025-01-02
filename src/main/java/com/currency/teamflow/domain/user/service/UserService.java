@@ -13,14 +13,13 @@ import com.currency.teamflow.global.error.exception.CustomException;
 import com.currency.teamflow.global.util.AuthenticationScheme;
 import com.currency.teamflow.global.util.JwtProvider;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class UserService {
@@ -44,18 +43,8 @@ public class UserService {
     }
 
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
-
-        List<User> users
-                = userRepository.findUserByEmailAndStatus(requestDto.getEmail(), Status.DELETE);
-
-        if (!users.isEmpty()) {
-            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
-        }
-
-        // 이메일 중복 검사
-        if(userRepository.existsUserByEmail(requestDto.getEmail())){
-            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
-        }
+        // email 중복체크
+        validDuplicateEmail(requestDto.getEmail());
 
         // 패스워드 인코딩
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
@@ -64,6 +53,15 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return new UserRegisterResponseDto(savedUser);
+    }
+
+    private void validDuplicateEmail(String email) {
+        final User emailUser = userRepository.findByEmail(email).orElse(null);
+
+        if (null != emailUser) {
+            // 이미 탈퇴한 email도 재가입 불가능하다.
+            throw new CustomException(ErrorCode.DUPLICATE_VALUE);
+        }
     }
 
     /**
@@ -146,6 +144,16 @@ public class UserService {
      */
     @Transactional
     public void updateWorkspaceMemberRole(Long loginUserId, Long workspaceId, RoleUpdateDto roleUpdateDto) {
+        WorkspaceUser targetUser = validPlocyCheck(loginUserId, workspaceId, roleUpdateDto);
+
+        // 역할 변경
+        targetUser.setRole(roleUpdateDto.getNewRole());
+        workspaceUserRepository.save(targetUser);
+    }
+
+    @NotNull
+    // FIXME : 메소드 이름 적절히 변경 필요
+    private WorkspaceUser validPlocyCheck(Long loginUserId, Long workspaceId, RoleUpdateDto roleUpdateDto) {
         // 사용자가 해당 워크 스페이스 속해 있는 지 확인
         WorkspaceUser workspaceUser = workspaceUserRepository.findByWorkspaceIdAndUserId(workspaceId, loginUserId)
                 .orElseThrow(() -> new CustomException(ErrorCode.FORBIDDEN_PERMISSION));
@@ -174,9 +182,7 @@ public class UserService {
             throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
         }
 
-        // 역할 변경
-        targetUser.setRole(roleUpdateDto.getNewRole());
-        workspaceUserRepository.save(targetUser);
+        return targetUser;
     }
 
     // 허용된 역할 검증
