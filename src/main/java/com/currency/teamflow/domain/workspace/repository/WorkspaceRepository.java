@@ -1,5 +1,6 @@
 package com.currency.teamflow.domain.workspace.repository;
 
+import com.currency.teamflow.domain.user.entity.User;
 import com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto;
 import com.currency.teamflow.domain.workspace.entity.Workspace;
 import com.currency.teamflow.global.error.errorcode.ErrorCode;
@@ -15,6 +16,8 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 	default Workspace findByIdOrElseThrow(Long workspaceId){
 		return findById(workspaceId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_WORKSPACE));
 	}
+
+
 
 
 	@Query("SELECT new com.currency.teamflow.domain.workspace.dto.UserWorkspaceListResponseDto(wu.workspace.id, wu.workspace.workspaceName, wu.workspace.workspaceExplanation, wu.role) "

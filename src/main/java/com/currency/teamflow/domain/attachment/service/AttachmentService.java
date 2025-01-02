@@ -15,9 +15,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AttachmentService {
@@ -90,35 +88,16 @@ public class AttachmentService {
 
     // 확장자 추출 메서드
     private static String getExtension(String originalFilename) {
-        String extension;
-        if(originalFilename.endsWith(".png")) {
-            extension = "png";
-        }
-        else if(originalFilename.endsWith(".PNG")){
-            extension = "PNG";
-        }
-        else if(originalFilename.endsWith(".jpg")) {
-            extension = "jpg";
-        }
-        else if(originalFilename.endsWith(".JPG")) {
-            extension = "JPG";
-        }
-        else if(originalFilename.endsWith(".csv")) {
-            extension = "csv";
-        }
-        else if(originalFilename.endsWith(".CSV")) {
-            extension = "CSV";
-        }
-        else if(originalFilename.endsWith(".pdf")) {
-            extension = "pdf";
-        }
-        else if(originalFilename.endsWith(".PDF")) {
-            extension = "PDF";
-        }
-        else {
+        final List<String> extList = List.of("png", "jpg", "csv", "pdf");
+
+        final String[] split = originalFilename.toLowerCase().split("\\.");
+        final String fileExt = split[split.length - 1];
+
+        if (!extList.contains(fileExt)) {
             throw new IllegalArgumentException("Unsupported file type: " + originalFilename);
         }
-        return extension;
+
+        return fileExt;
     }
 
     // S3 서버 경로 가져오는 메서드
